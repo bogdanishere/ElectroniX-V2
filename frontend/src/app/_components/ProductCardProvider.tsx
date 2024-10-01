@@ -23,7 +23,7 @@ interface ProductProps {
   categories: string;
   dateAdded: string;
   dateUpdated: string;
-  imageURLs: string;
+  imageurls: string;
   sourceURLs: string;
   rating: string;
   nr_rating: number;
@@ -40,7 +40,7 @@ export default function ProductCardProvider({
 }) {
   const {
     product_id,
-    imageURLs: images,
+    imageurls: images,
     name,
     rating,
     nr_rating: numberOfRatings,
@@ -52,22 +52,14 @@ export default function ProductCardProvider({
 
   const [currencyPrice, setCurrencyPrice] = useState(price);
 
-  const [imageSrc, setImageSrc] = useState(() => {
-    if (typeof images === "string") {
-      return images.split(",").map((url) => url.trim());
-    } else if (Array.isArray(images)) {
-      return images;
-    } else {
-      return [];
-    }
-  });
+  const [imageSrc, setImageSrc] = useState(images);
 
   async function handleDeleteProduct(product_id: string) {
     await deleteProviderProduct(product_id, page);
   }
 
   function handleImageError() {
-    setImageSrc(["https://via.placeholder.com/300"]);
+    setImageSrc("https://via.placeholder.com/300");
   }
 
   useEffect(() => {
@@ -83,7 +75,7 @@ export default function ProductCardProvider({
       <div className="max-w-xs border border-gray-300 rounded-lg overflow-hidden font-sans">
         <div className="text-center bg-white">
           <Image
-            src={imageSrc[0]}
+            src={imageSrc}
             alt={name}
             width={300}
             height={300}

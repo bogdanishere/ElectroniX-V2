@@ -1,18 +1,13 @@
 import api from "../axiosInstance";
 
 export async function getProviderOrders(username: string, token: string) {
-  try {
-    const response = await api.get(`/provider/orders?username=${username}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  const response = await api.get(`/provider/orders?username=${username}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return response.data;
 }
 
 export async function getProviderProducts(
@@ -20,21 +15,16 @@ export async function getProviderProducts(
   token: string,
   page: number
 ) {
-  try {
-    const response = await api.get(
-      `/provider/products/${page}?username=${username}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  const response = await api.get(
+    `/provider/products/${page}?username=${username}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return response.data;
 }
 
 export async function deleteProviderProduct(
@@ -42,21 +32,16 @@ export async function deleteProviderProduct(
   token: string,
   username: string
 ) {
-  try {
-    const response = await api.delete(
-      `/provider/deleteproduct/${productId}?username=${username}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  const response = await api.delete(
+    `/provider/deleteproduct/${productId}?username=${username}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return response.data;
 }
 
 export async function confirmProviderOrder(
@@ -64,22 +49,17 @@ export async function confirmProviderOrder(
   token: string,
   username: string
 ) {
-  try {
-    const response = await api.patch(
-      `/provider/confirmorder/${orderDetailId}?username=${username}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  const response = await api.patch(
+    `/provider/confirmorder/${orderDetailId}?username=${username}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return response.data;
 }
 
 export async function deleteProviderOrder(
@@ -87,21 +67,16 @@ export async function deleteProviderOrder(
   token: string,
   username: string
 ) {
-  try {
-    const response = await api.delete(
-      `/provider/deleteorder/${orderDetailId}?username=${username}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  const response = await api.delete(
+    `/provider/deleteorder/${orderDetailId}?username=${username}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return response.data;
 }
 
 export async function addProviderProduct(
@@ -109,21 +84,15 @@ export async function addProviderProduct(
   token: string,
   username: string
 ) {
-  try {
-    console.log("formData", formData);
-    const response = await api.post(
-      `/provider/addproduct?username=${username}`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  const response = await api.post(
+    `/provider/addproduct?username=${username}`,
+    formData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  return response.data;
 }

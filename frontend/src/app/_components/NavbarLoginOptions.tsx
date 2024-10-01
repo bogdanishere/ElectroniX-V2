@@ -61,13 +61,22 @@ export default function NavbarLoginOptions({
           </div>
         </>
       ) : (
-        <Link href="/login">
-          <div className="pl-10 w-32">
-            <Button type="button" className="w-32">
-              Login
-            </Button>
-          </div>
-        </Link>
+        <div className="flex gap-5">
+          <Link href="/login">
+            <div className="pl-10 w-32">
+              <Button type="button" className="w-32">
+                Login
+              </Button>
+            </div>
+          </Link>
+          <Link href="/register">
+            <div className="w-32">
+              <Button type="button" className="w-32">
+                Register
+              </Button>
+            </div>
+          </Link>
+        </div>
       )}
     </>
   );

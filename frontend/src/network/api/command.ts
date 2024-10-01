@@ -6,20 +6,16 @@ export async function paymentStripe(
   token: string,
   username: string
 ) {
-  try {
-    const response = await api.post(
-      "/payment/payment",
-      { price, currency, username },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await api.post(
+    "/payment/payment",
+    { price, currency, username },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
 }
 
 interface ObjectProducts {
@@ -39,36 +35,29 @@ export async function addCommand(
   token: string,
   username: string
 ) {
-  try {
-    const response = await api.post(
-      "/command/command",
-      {
-        clientUsername,
-        products,
-        sessionId,
-        username,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export async function getOrders(username: string, token: string) {
-  try {
-    const response = await api.get(`/order/order?username=${username}`, {
+  const response = await api.post(
+    "/command/command",
+    {
+      clientUsername,
+      products,
+      sessionId,
+      username,
+    },
+    {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+    }
+  );
+  return response.data;
+}
+
+export async function getOrders(username: string, token: string) {
+  const response = await api.get(`/order/order?username=${username}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
 }

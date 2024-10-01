@@ -1,10 +1,9 @@
 import { getBrandCount, getOrdersEmployee } from "../_lib/actions";
-import { getTokenUsername } from "@/helpers/getTokenUsername";
-
 import { formatDate } from "@/utils/formatDate";
 import AcceptRejectCommandsByEmployee from "../_components/AcceptRejectCommandsByEmployee";
 import SatisticsForEmployee from "../_components/SatisticsForEmployee";
 import { verifyRestriction } from "@/helpers/verifyRestriction";
+import { getTokenUsernameProfilePic } from "@/helpers/getUserDetails";
 
 interface OrdersProps {
   orders: OrdersProp[];
@@ -27,7 +26,8 @@ interface BrandSatisticsProps {
 export default async function Page() {
   await verifyRestriction("employee");
 
-  const { clientUsername: username, token } = await getTokenUsername();
+  const { clientUsername: username, token } =
+    await getTokenUsernameProfilePic();
 
   const orders: OrdersProps = (await getOrdersEmployee(username, token)) || [];
 

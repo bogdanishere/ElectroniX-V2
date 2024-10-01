@@ -44,7 +44,7 @@ interface ProductProps {
   categories: string;
   dateAdded: string;
   dateUpdated: string;
-  imageURLs: string;
+  imageurls: string;
   sourceURLs: string;
   rating: string;
   nr_rating: number;
@@ -107,7 +107,6 @@ export default async function Page({ params }: { params: { page: string } }) {
         Add your products to us
       </div>
       <FormProviderAddProduct page={params.page} />
-      <div className=""></div>
       <div className="max-w-screen-xl mx-auto grid grid-rows-auto grid-cols-4 gap-8 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 pt-5">
         {products.products.map((product) => (
           <ProductCardProvider

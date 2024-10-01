@@ -6,7 +6,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import * as address from "@/network/api/address";
-import { NotFoundError } from "@/network/http-errors";
 
 import * as command from "@/network/api/command";
 
@@ -18,7 +17,7 @@ import * as employeeRequests from "@/network/api/employee";
 import * as providerRequests from "@/network/api/provider";
 
 import { revalidatePath } from "next/cache";
-import { getTokenUsername } from "@/helpers/getTokenUsername";
+import { getTokenUsernameProfilePic } from "@/helpers/getUserDetails";
 
 export async function loginGoogle() {
   await signIn("google", {
@@ -112,7 +111,8 @@ export async function addAddress(data: FormData) {
     return redirect(`/errorpage?error=${"InvalidData"}`);
   }
 
-  const { token, clientUsername: username } = await getTokenUsername();
+  const { token, clientUsername: username } =
+    await getTokenUsernameProfilePic();
 
   if (!username) {
     redirect("/login");
@@ -136,7 +136,8 @@ export async function addAddress(data: FormData) {
 }
 
 export async function checkAddress() {
-  const { token, clientUsername: username } = await getTokenUsername();
+  const { token, clientUsername: username } =
+    await getTokenUsernameProfilePic();
 
   if (!username) {
     redirect("/login");
@@ -153,7 +154,7 @@ export async function checkAddress() {
     );
   }
 
-  if (res instanceof NotFoundError || !res) {
+  if (!res.address) {
     return false;
   }
 
@@ -161,7 +162,8 @@ export async function checkAddress() {
 }
 
 export async function paymentStripe(price: number, currency: string) {
-  const { token, clientUsername: username } = await getTokenUsername();
+  const { token, clientUsername: username } =
+    await getTokenUsernameProfilePic();
 
   const res = await command.paymentStripe(+price, currency, token, username);
 
@@ -182,7 +184,7 @@ export async function commandConfirm(
   products: ObjectProducts,
   sessionId: string
 ) {
-  const { token, clientUsername } = await getTokenUsername();
+  const { token, clientUsername } = await getTokenUsernameProfilePic();
 
   const res = await command.addCommand(
     clientUsername,
@@ -214,7 +216,7 @@ export async function searchProducts(
 }
 
 export async function getOrders() {
-  const { token, clientUsername } = await getTokenUsername();
+  const { token, clientUsername } = await getTokenUsernameProfilePic();
 
   const res = await command.getOrders(clientUsername, token);
 
@@ -240,7 +242,7 @@ export async function postReview({
     return;
   }
 
-  const { token, clientUsername } = await getTokenUsername();
+  const { token, clientUsername } = await getTokenUsernameProfilePic();
   if (!clientUsername || !token) {
     return redirect(`/login`);
   }
@@ -274,7 +276,8 @@ export async function getOrdersEmployee(employee: string, token: string) {
 }
 
 export async function getBrandCount(numberOfBrands: number) {
-  const { token, clientUsername: employee } = await getTokenUsername();
+  const { token, clientUsername: employee } =
+    await getTokenUsernameProfilePic();
   const res = await employeeRequests.getBrandCount({
     numberOfBrands,
     employee,
@@ -289,7 +292,8 @@ export async function getBrandCount(numberOfBrands: number) {
 }
 
 export async function confirmOrder({ orderID }: { orderID: number }) {
-  const { token, clientUsername: employee } = await getTokenUsername();
+  const { token, clientUsername: employee } =
+    await getTokenUsernameProfilePic();
   const res = await employeeRequests.confirmOrder({ orderID, employee, token });
 
   if (!res) {
@@ -302,7 +306,8 @@ export async function confirmOrder({ orderID }: { orderID: number }) {
 }
 
 export async function deleteOrder({ orderID }: { orderID: number }) {
-  const { clientUsername: username, token } = await getTokenUsername();
+  const { clientUsername: username, token } =
+    await getTokenUsernameProfilePic();
 
   const res = await employeeRequests.deleteOrder({ orderID, token, username });
 
@@ -316,7 +321,8 @@ export async function deleteOrder({ orderID }: { orderID: number }) {
 }
 
 export async function addProviderProduct(formData: FormData) {
-  const { clientUsername: providerUsername, token } = await getTokenUsername();
+  const { clientUsername: providerUsername, token } =
+    await getTokenUsernameProfilePic();
   const res = await providerRequests.addProviderProduct(
     formData,
     token,
@@ -331,7 +337,8 @@ export async function addProviderProduct(formData: FormData) {
 }
 
 export async function showOrdersProvider() {
-  const { clientUsername: username, token } = await getTokenUsername();
+  const { clientUsername: username, token } =
+    await getTokenUsernameProfilePic();
 
   const res = await providerRequests.getProviderOrders(username, token);
 
@@ -346,7 +353,8 @@ export async function confirmProviderOrder(
   orderDetailId: number,
   page: number | string
 ) {
-  const { clientUsername: username, token } = await getTokenUsername();
+  const { clientUsername: username, token } =
+    await getTokenUsernameProfilePic();
   const res = await providerRequests.confirmProviderOrder(
     orderDetailId,
     token,
@@ -366,7 +374,8 @@ export async function deleteProviderOrder(
   orderDetailId: number,
   page: number | string
 ) {
-  const { clientUsername: username, token } = await getTokenUsername();
+  const { clientUsername: username, token } =
+    await getTokenUsernameProfilePic();
   const res = await providerRequests.deleteProviderOrder(
     orderDetailId,
     token,
@@ -383,7 +392,8 @@ export async function deleteProviderOrder(
 }
 
 export async function getProviderProducts(page: number) {
-  const { clientUsername: username, token } = await getTokenUsername();
+  const { clientUsername: username, token } =
+    await getTokenUsernameProfilePic();
 
   const res = await providerRequests.getProviderProducts(username, token, page);
 
@@ -398,7 +408,8 @@ export async function deleteProviderProduct(
   productId: string,
   page: number | string
 ) {
-  const { clientUsername: username, token } = await getTokenUsername();
+  const { clientUsername: username, token } =
+    await getTokenUsernameProfilePic();
 
   const res = await providerRequests.deleteProviderProduct(
     productId,

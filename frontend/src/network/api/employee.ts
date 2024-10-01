@@ -1,5 +1,3 @@
-// http://localhost:5000/employee/orders?employee=test_employee
-
 import api from "../axiosInstance";
 
 export async function getOrders({
@@ -9,20 +7,13 @@ export async function getOrders({
   employee: string;
   token: string;
 }) {
-  try {
-    const response = await api.get(`/employee/orders?username=${employee}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  const response = await api.get(`/employee/orders?username=${employee}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
 }
-
-// http://localhost:5000/employee/brandcount/4
 
 export async function getBrandCount({
   numberOfBrands,
@@ -33,24 +24,16 @@ export async function getBrandCount({
   employee: string;
   token: string;
 }) {
-  try {
-    console.log("brandcount", numberOfBrands);
-    const response = await api.get(
-      `/employee/brandcount/${numberOfBrands}?username=${employee}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  const response = await api.get(
+    `/employee/brandcount/${numberOfBrands}?username=${employee}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
 }
-
-// http://localhost:5000/employee/confirmorder/184?username=test_employee
 
 export async function confirmOrder({
   orderID,
@@ -61,24 +44,17 @@ export async function confirmOrder({
   employee: string;
   token: string;
 }) {
-  try {
-    const response = await api.patch(
-      `/employee/confirmorder/${orderID}?username=${employee}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  const response = await api.patch(
+    `/employee/confirmorder/${orderID}?username=${employee}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
 }
-
-// http://localhost:5000/employee/deleteorder/183
 
 export async function deleteOrder({
   orderID,
@@ -89,18 +65,13 @@ export async function deleteOrder({
   token: string;
   username: string;
 }) {
-  try {
-    const response = await api.delete(
-      `/employee/deleteorder/${orderID}?username=${username}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  const response = await api.delete(
+    `/employee/deleteorder/${orderID}?username=${username}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
 }

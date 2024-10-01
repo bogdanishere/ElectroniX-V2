@@ -21,7 +21,7 @@ interface ProductDetails {
   dateAdded: string;
   dateUpdated: string;
   description: string;
-  imageURLs: string[];
+  imageurls: string;
   rating: string;
   nr_rating: number;
   prices_availability: string;
@@ -52,14 +52,15 @@ export default function SingleProductDescription({
     product_id,
     prices_merchant: provider,
     price,
-    imageURLs,
+    imageurls: images,
     name,
     description,
     rating,
     nr_rating: nrRating,
   } = dataProduct.product;
 
-  const [imageSrc, setImageSrc] = useState(imageURLs[0]);
+  const [imageSrc, setImageSrc] = useState(images);
+
   function handleImageError() {
     setImageSrc("https://via.placeholder.com/300");
   }

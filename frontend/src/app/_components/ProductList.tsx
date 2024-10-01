@@ -15,7 +15,7 @@ interface ProductProps {
   categories: string;
   dateAdded: string;
   dateUpdated: string;
-  imageURLs: string[];
+  imageurls: string[];
   sourceURLs: string;
   rating: string;
   nr_rating: number;

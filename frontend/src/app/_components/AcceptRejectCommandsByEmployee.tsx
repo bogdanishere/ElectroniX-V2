@@ -10,7 +10,6 @@ export default function AcceptRejectCommandsByEmployee({
 }) {
   async function hanleAccept(orderId: number) {
     await confirmOrder({ orderID: orderId });
-    console.log("Accept");
   }
   async function hanleReject(orderId: number) {
     await deleteOrder({ orderID: orderId });

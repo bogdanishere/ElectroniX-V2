@@ -8,7 +8,7 @@ import {
 } from "./http-errors";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: process.env.BACKEND_URL,
   timeout: 10_000,
   withCredentials: true,
 });
