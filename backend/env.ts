@@ -16,6 +16,7 @@ const env = cleanEnv(process.env, {
   JWT_SECRET: str(),
   SERVER_URL: str(),
   FRONTEND_URL: str(),
+  BACKEND_URL: str(),
 });
 
 export default env;
