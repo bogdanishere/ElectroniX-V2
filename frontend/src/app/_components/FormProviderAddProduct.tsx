@@ -17,7 +17,8 @@ export default function FormProviderAddProduct({
           name="currency"
           type="text"
           label="Currency"
-          placeholder="USD"
+          defaultValue={"USD"}
+          disabled
         />
         <InputField name="weight" type="text" label="Weight" />
         <InputField name="categories" type="text" label="Categories" />

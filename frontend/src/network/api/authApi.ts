@@ -1,12 +1,9 @@
 import api from "../axiosInstance";
 
 export async function loginClient(email: string, password: string) {
-  try {
-    const response = await api.post("/auth/login", { email, password });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await api.post("/auth/login", { email, password });
+
+  return response.data;
 }
 
 export async function registerClient(
@@ -16,18 +13,14 @@ export async function registerClient(
   firstName: string,
   lastName: string
 ) {
-  try {
-    const response = await api.post("/auth/register", {
-      username,
-      password,
-      email,
-      firstName,
-      lastName,
-    });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await api.post("/auth/register", {
+    username,
+    password,
+    email,
+    firstName,
+    lastName,
+  });
+  return response.data;
 }
 
 interface checkExistentAccountProps {
@@ -38,10 +31,6 @@ interface checkExistentAccountProps {
 export async function checkExistentClient(
   username: string
 ): Promise<checkExistentAccountProps | undefined> {
-  try {
-    const response = await api.post("/auth/existentClient", { username });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await api.post("/auth/existentClient", { username });
+  return response.data;
 }

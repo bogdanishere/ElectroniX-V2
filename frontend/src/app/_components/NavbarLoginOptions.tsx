@@ -9,14 +9,18 @@ import { logout } from "../_lib/actions";
 import defaultImage from "@/app/images/default_profile.jpg";
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { Session } from "next-auth";
+import { useButtonsFunctionality } from "@/hooks/useButtonsFunctionality";
 
 export default function NavbarLoginOptions({
   cookiesLogin,
   session,
+  imageProfile,
 }: {
   cookiesLogin: RequestCookie | undefined;
   session: Session | null;
+  imageProfile: string;
 }) {
+  const { setOpenModifyProfilePicture } = useButtonsFunctionality();
   const [isClient, setIsClient] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [logoutClicked, setLogoutClicked] = useState(false);
@@ -47,8 +51,9 @@ export default function NavbarLoginOptions({
         <>
           <div className="flex items-center justify-center pl-10">
             <Image
-              src={session?.user?.image ?? defaultImage}
+              src={imageProfile ?? defaultImage}
               alt="user"
+              onClick={() => setOpenModifyProfilePicture(true)}
               width={59}
               height={59}
               className="rounded-full"
@@ -61,13 +66,22 @@ export default function NavbarLoginOptions({
           </div>
         </>
       ) : (
-        <Link href="/login">
-          <div className="pl-10 w-32">
-            <Button type="button" className="w-32">
-              Login
-            </Button>
-          </div>
-        </Link>
+        <div className="flex gap-5">
+          <Link href="/login">
+            <div className="pl-10 w-32">
+              <Button type="button" className="w-32">
+                Login
+              </Button>
+            </div>
+          </Link>
+          <Link href="/register">
+            <div className="w-32">
+              <Button type="button" className="w-32">
+                Register
+              </Button>
+            </div>
+          </Link>
+        </div>
       )}
     </>
   );

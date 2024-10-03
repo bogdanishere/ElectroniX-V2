@@ -3,8 +3,8 @@ import { getOrders } from "../_lib/actions";
 import Button from "@/utils/Button";
 
 import { redirect } from "next/navigation";
-import { getTokenUsername } from "@/helpers/getTokenUsername";
 import { formatDate } from "@/utils/formatDate";
+import { getTokenUsernameProfilePic } from "@/helpers/getUserDetails";
 
 interface OrdersProps {
   orders: OrdersProp[];
@@ -27,13 +27,14 @@ interface OrdersProp {
 }
 
 export default async function Page() {
-  const { token } = await getTokenUsername();
+  const { token } = await getTokenUsernameProfilePic();
 
   if (!token) {
     redirect("/login");
   }
 
   const orders = (await getOrders()) as OrdersProps;
+
   return (
     <div className="flex flex-col justify-center">
       <div className="flex flex-col gap-10 justify-center items-center pt-5">

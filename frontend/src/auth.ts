@@ -31,6 +31,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               password
             );
             token.jwt = res.token;
+            token.image = res.image;
           } else {
             const res = await authentification.registerClient(
               user.name,
@@ -50,6 +51,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       // @ts-expect-error Property 'jwt' is saving in session token
       session.jwt = token.jwt;
+      // @ts-expect-error Property 'image' is saving in session user
+      if (token.image) session.user.image = token.image;
       return session;
     },
 

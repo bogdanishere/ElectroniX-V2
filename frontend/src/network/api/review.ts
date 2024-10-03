@@ -9,14 +9,14 @@ export async function addReview({
   productID,
   title,
   review,
-  clientUsername,
+  username,
   rating,
   token,
 }: {
   productID: string;
   title: string;
   review: string;
-  clientUsername: string;
+  username: string;
   rating: number;
   token: string;
 }) {
@@ -26,7 +26,7 @@ export async function addReview({
       productID,
       title,
       review,
-      username: clientUsername,
+      username,
       rating,
     },
     {

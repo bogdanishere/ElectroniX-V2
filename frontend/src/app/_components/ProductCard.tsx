@@ -26,7 +26,7 @@ interface ProductProps {
   categories: string;
   dateAdded: string;
   dateUpdated: string;
-  imageURLs: string[];
+  imageurls: string[];
   sourceURLs: string;
   rating: string;
   nr_rating: number;
@@ -41,7 +41,7 @@ export default function ProductCard({
 }) {
   const {
     product_id,
-    imageURLs: images,
+    imageurls: images,
     name,
     rating,
     nr_rating: numberOfRatings,

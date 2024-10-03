@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import NavbarAdmins from "../_components/NavbarAdmins";
+import { ButtonsFunctionality } from "../_components/ButtonsFunctionality";
 
 export const metadata = {
   title: {
@@ -15,6 +16,7 @@ export default async function RootLayout({
   return (
     <div>
       <NavbarAdmins />
+      <ButtonsFunctionality />
       {children}
     </div>
   );

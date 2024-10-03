@@ -21,7 +21,8 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { useActualCurrency } from "@/hooks/useActualCurrency";
 import StarRating from "@/utils/StarRating";
-import { postReview } from "../_lib/actions";
+import { postReview, updateProfile } from "../_lib/actions";
+import Image from "next/image";
 
 interface ModalContextType {
   isOpen: boolean;
@@ -257,6 +258,66 @@ function Wishies() {
   );
 }
 
+function ModifyProfilePicture() {
+  const { close } = useContext(ModalContext)!;
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  }
+
+  async function handleSave() {
+    if (!imageFile) return;
+
+    const formData = new FormData();
+    formData.append("image_profile", imageFile);
+
+    console.log("formData", formData);
+
+    await updateProfile(formData);
+    close();
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-6 p-6 bg-background rounded-lg shadow-md max-w-md mx-auto">
+      <h1 className="text-3xl font-bold text-foreground">
+        Modify your profile picture
+      </h1>
+      <div>You cannot send something else</div>
+      <div className="w-full">
+        <label
+          htmlFor="file-upload"
+          className="flex flex-col items-center justify-center px-4 py-6 bg-background text-primary rounded-lg shadow-lg tracking-wide uppercase border border-primary cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
+        >
+          <span className="mt-2 text-base leading-normal">Select a file</span>
+          <input
+            id="file-upload"
+            type="file"
+            className="hidden"
+            onChange={handleImageChange}
+          />
+        </label>
+      </div>
+      {imagePreview && (
+        <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-primary shadow-lg">
+          <Image
+            src={imagePreview}
+            alt="Profile Preview"
+            layout="fill"
+            objectFit="cover"
+          />
+        </div>
+      )}
+      <Button onClick={handleSave}>Save the change</Button>
+    </div>
+  );
+}
+
 function AddReview() {
   const pathname = usePathname();
 
@@ -328,5 +389,6 @@ Modal.Window = Window;
 Modal.Products = Products;
 Modal.Wishies = Wishies;
 Modal.AddReview = AddReview;
+Modal.ModifyProfilePicture = ModifyProfilePicture;
 
 export default Modal;

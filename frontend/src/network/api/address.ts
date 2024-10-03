@@ -40,19 +40,14 @@ export async function addAddress({
   token: string;
   state: string;
 }) {
-  try {
-    const response = await api.post(
-      "/address/address",
-      { username, street, city, country, postal_code, state },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  const response = await api.post(
+    "/address/address",
+    { username, street, city, country, postal_code, state },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
 }
