@@ -10,7 +10,7 @@ export default function FormProviderAddProduct({
   return (
     <div className="flex justify-center">
       <form action={addProviderProduct} className="pt-5 w-[800px]">
-        <InputField name="name" type="text" label="Product Name" />
+        <InputField name="productName" type="text" label="Product Name" />
         <InputField name="price" type="number" label="Price" />
         <InputField name="brand" type="text" label="Brand" />
         <InputField
@@ -18,7 +18,7 @@ export default function FormProviderAddProduct({
           type="text"
           label="Currency"
           defaultValue={"USD"}
-          disabled
+          readOnly
         />
         <InputField name="weight" type="text" label="Weight" />
         <InputField name="categories" type="text" label="Categories" />

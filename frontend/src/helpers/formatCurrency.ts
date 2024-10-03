@@ -29,7 +29,6 @@ export async function convertAmount(
     // returnez valoarea convertita
     return convertedAmount;
   } catch (error) {
-    console.error("There was an error converting the currency:", error);
     return null; // sau poti returna
   }
 }

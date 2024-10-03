@@ -277,8 +277,6 @@ function ModifyProfilePicture() {
     const formData = new FormData();
     formData.append("image_profile", imageFile);
 
-    console.log("formData", formData);
-
     await updateProfile(formData);
     close();
   }

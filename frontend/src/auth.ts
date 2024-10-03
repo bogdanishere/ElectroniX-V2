@@ -42,9 +42,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             );
             token.jwt = res.token;
           }
-        } catch (error) {
-          console.error("JWT Callback Error:", error);
-        }
+        } catch (error) {}
       }
       return token;
     },

@@ -27,8 +27,6 @@ export const addReview: RequestHandler = async (req, res, next) => {
     const rating = x[0].rating;
     const nr_rating = x[0].nr_rating;
 
-    console.log("nr_rating", nr_rating);
-
     const avarageRatingATM = Number(rating);
     const totalRatings = Number(nr_rating);
     const newAvarageRating =

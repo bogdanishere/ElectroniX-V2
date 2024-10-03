@@ -8,10 +8,6 @@ export const checkAddress: RequestHandler = async (req, res, next) => {
     const address =
       await sql`SELECT * FROM address WHERE client_username = ${username}`;
 
-    console.log("address", address.length === 0);
-
-    console.log("address", address);
-
     if (address.length === 0) {
       return res
         .status(200)

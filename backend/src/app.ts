@@ -61,16 +61,6 @@ app.use("/uploads/products", express.static("uploads/products"));
 
 app.use("/uploads/profilepic", express.static("uploads/profilepic"));
 
-app.use((req, res, next) => {
-  if (
-    req.url.startsWith("/uploads/products") ||
-    req.url.startsWith("/uploads/profilepic")
-  ) {
-    req.url = `${env.BACKEND_URL}${req.url}`;
-  }
-  next();
-});
-
 app.use((req, res, next) => next(createHttpError(404, "Endpoint not found")));
 
 export default app;

@@ -19,8 +19,6 @@ export const addCommand: RequestHandler = async (req, res, next) => {
       WHERE client_username = ${clientUsername}
     `;
 
-    console.log("addressResult:", addressResult);
-
     if (addressResult.length === 0) {
       return res
         .status(404)
@@ -51,13 +49,10 @@ export const addCommand: RequestHandler = async (req, res, next) => {
     }
 
     const orderId = insertOrderResult[0].order_id;
-    console.log("Created order with order_id:", orderId);
 
     // Insert each product into orderdetails with the correct status
     for (const product of products) {
       const { productId, providerUsername, quantity } = product;
-
-      console.log("providerUsername:", providerUsername);
 
       const status = "preparing";
 
@@ -83,7 +78,6 @@ export const addCommand: RequestHandler = async (req, res, next) => {
 
     res.status(201).json({ message: "Command added successfully" });
   } catch (error) {
-    console.error("Error adding command:", error);
     next(error);
   }
 };
