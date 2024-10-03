@@ -317,8 +317,6 @@ export async function addProvider(data: FormData) {
     return redirect(`/errorpage?error=${"Passwords do not match"}`);
   }
 
-  console.log("providerName", providerName);
-
   const res = await employeeRequests.addProvider(
     providerName,
     providerEmail,
@@ -340,7 +338,16 @@ export async function addProviderProduct(formData: FormData) {
     return redirect("/login");
   }
 
-  if (!formData) {
+  if (
+    !formData.get("productName") ||
+    !formData.get("price") ||
+    !formData.get("quantity") ||
+    !formData.get("categories") ||
+    !formData.get("description") ||
+    !formData.get("brand") ||
+    !formData.get("weight") ||
+    !formData.get("currency")
+  ) {
     return redirect(`/errorpage?error=${"InvalidData"}`);
   }
 
@@ -459,8 +466,6 @@ export async function updateProfile(profileImage: FormData) {
   const loginCookies = cookies().get("login");
 
   const loginCookiesValue = loginCookies?.value || "{}";
-
-  console.log("loginCookiesValue", loginCookiesValue);
 
   cookies().set(
     "login",

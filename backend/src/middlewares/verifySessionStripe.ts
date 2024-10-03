@@ -4,8 +4,6 @@ import paymentIdStripeVerification from "../models/mongodb";
 export const verifySessionStripe: RequestHandler = async (req, res, next) => {
   const { sessionId } = req.body;
 
-  console.log("sessionId", sessionId);
-
   if (!sessionId) {
     return res.status(400).json({ message: "No session id provided" });
   }

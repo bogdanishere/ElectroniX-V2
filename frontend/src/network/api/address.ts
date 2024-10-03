@@ -18,9 +18,7 @@ export async function checkAddress({
       }
     );
     return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  } catch (error) {}
 }
 
 export async function addAddress({

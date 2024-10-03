@@ -41,7 +41,6 @@ export default function SatisticsForEmployee({
         }))
       );
     } catch (error) {
-      console.error("Failed to fetch brand data:", error);
     } finally {
       setLoading(false);
     }

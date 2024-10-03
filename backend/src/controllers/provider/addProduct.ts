@@ -25,7 +25,7 @@ export const addProduct: RequestHandler = async (req, res, next) => {
     price,
     currency,
     weight,
-    name,
+    productName: name,
     brand,
     quantity,
     categories,
@@ -50,11 +50,15 @@ export const addProduct: RequestHandler = async (req, res, next) => {
     });
   }
 
+  console.log(featuredImage);
+
   if (!featuredImage) {
     return res.status(400).json({
       message: "Please provide a featured image",
     });
   }
+
+  console.log("rulez");
 
   const featureImageUploadPath = "/uploads/products/" + productId + ".png";
   await sharp(featuredImage?.buffer)

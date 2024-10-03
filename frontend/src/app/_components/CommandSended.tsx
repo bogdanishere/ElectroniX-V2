@@ -42,9 +42,7 @@ export default function CommandSended({ sessionId }: { sessionId: string }) {
           await commandConfirm(sendCommand, sessionId);
 
           localStorage.removeItem("cartProducts");
-        } catch (error) {
-          console.error("Failed to send command:", error);
-        }
+        } catch (error) {}
       };
 
       handleCommand(products);

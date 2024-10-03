@@ -1,10 +1,8 @@
 import { RequestHandler } from "express";
 import sql from "../models/neon";
 
-export const searchFinishOrders: RequestHandler = async (req, res) => {
+export const searchFinishOrders: RequestHandler = async (req, res, next) => {
   const { username: clientUsername } = req.query;
-
-  console.log("clientUsername:", clientUsername);
 
   if (!clientUsername) {
     return res.status(400).json({ message: "Client username is required" });
@@ -37,7 +35,6 @@ export const searchFinishOrders: RequestHandler = async (req, res) => {
 
     return res.status(200).json({ orders: order, message: "Success" });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Internal server error" });
+    next(err);
   }
 };

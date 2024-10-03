@@ -18,10 +18,6 @@ export async function getTokenUsernameProfilePic() {
 
   const imageProfile = cookiesImage ? cookiesImage : sessionImage;
 
-  console.log("cookiesImage", cookiesImage);
-
-  console.log("profileImage", imageProfile);
-
   // @ts-expect-error Property 'jwt' does exist on type 'Session'.
   const token: string = session?.jwt || cookiesToken;
 

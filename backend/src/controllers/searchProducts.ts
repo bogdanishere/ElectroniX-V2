@@ -3,7 +3,7 @@ import sql from "../models/neon";
 
 type SortProps = "asc" | "desc" | "none";
 
-export const searchProducts: RequestHandler = async (req, res) => {
+export const searchProducts: RequestHandler = async (req, res, next) => {
   const { page, productName } = req.params as {
     page: string;
     productName: string;
@@ -34,7 +34,6 @@ export const searchProducts: RequestHandler = async (req, res) => {
       status: "success",
     });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Internal server error" });
+    next(err);
   }
 };
