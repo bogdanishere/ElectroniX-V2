@@ -5,7 +5,6 @@ import cors from "cors";
 import env from "../env";
 
 import products from "./routes/products";
-import admin from "./routes/admin";
 import authentification from "./routes/authentification";
 import search from "./routes/search";
 import review from "./routes/review";
@@ -15,6 +14,7 @@ import payment from "./routes/payment";
 import command from "./routes/command";
 import employee from "./routes/employee/employee";
 import provider from "./routes/provider/provider";
+import updateProfile from "./routes/updateImageProfile";
 
 import { verifyClientToken } from "./middlewares/verifyToken";
 import { verifySessionStripe } from "./middlewares/verifySessionStripe";
@@ -22,7 +22,7 @@ import { verifySessionStripe } from "./middlewares/verifySessionStripe";
 import createHttpError from "http-errors";
 import { verifyEmployeeToken } from "./middlewares/verifyTokenEmployee";
 import { verifyProviderToken } from "./middlewares/verifyTokenProvider";
-// import limiter from "./middlewares/limitRequests";
+import { verifyTokenUsers } from "./middlewares/verifyTokenUsers";
 
 const app = express();
 
@@ -36,10 +36,6 @@ app.use(
     credentials: true,
   })
 );
-
-// app.use(limiter);
-
-app.use("/admin", admin);
 
 app.use("/auth", authentification);
 app.use("/products", products);
@@ -55,7 +51,11 @@ app.use("/employee", verifyEmployeeToken, employee);
 
 app.use("/provider", verifyProviderToken, provider);
 
+app.use("/update", verifyTokenUsers, updateProfile);
+
 app.use("/uploads/products", express.static("uploads/products"));
+
+app.use("/uploads/profilepic", express.static("uploads/profilepic"));
 
 app.use((req, res, next) => next(createHttpError(404, "Endpoint not found")));
 

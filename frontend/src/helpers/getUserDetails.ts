@@ -12,14 +12,18 @@ export async function getTokenUsernameProfilePic() {
 
   const cookiesToken = cookiesLogin ? JSON.parse(cookiesLogin).token : null;
 
-  const clientUsername = session?.user?.name || cookiesUsername;
+  const username: string = session?.user?.name || cookiesUsername;
 
   const sessionImage = session?.user?.image;
 
-  const imageProfile = sessionImage || cookiesImage;
+  const imageProfile = cookiesImage ? cookiesImage : sessionImage;
+
+  console.log("cookiesImage", cookiesImage);
+
+  console.log("profileImage", imageProfile);
 
   // @ts-expect-error Property 'jwt' does exist on type 'Session'.
-  const token = session?.jwt || cookiesToken;
+  const token: string = session?.jwt || cookiesToken;
 
-  return { token, clientUsername, imageProfile };
+  return { token, username, imageProfile };
 }

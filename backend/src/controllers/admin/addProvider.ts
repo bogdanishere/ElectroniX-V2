@@ -6,8 +6,6 @@ export const addProvider: RequestHandler = async (req, res, next) => {
   try {
     const { name, email } = req.body;
 
-    console.log("name", name);
-    console.log("email", email);
     const defaultPassword = "password_provider";
     const hashedPassword = bcrypt.hashSync(defaultPassword, 8);
 

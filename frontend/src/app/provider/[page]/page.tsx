@@ -107,7 +107,10 @@ export default async function Page({ params }: { params: { page: string } }) {
         Add your products to us
       </div>
       <FormProviderAddProduct page={params.page} />
-      <div className="max-w-screen-xl mx-auto grid grid-rows-auto grid-cols-4 gap-8 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 pt-5">
+      <div className="flex justify-center items-center text-2xl font-bold pt-5 pb-5">
+        Your products are there
+      </div>
+      <div className="max-w-screen-xl mx-auto grid grid-rows-auto grid-cols-4 gap-5 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 pt-5">
         {products.products.map((product) => (
           <ProductCardProvider
             key={product.product_id}

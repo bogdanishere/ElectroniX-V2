@@ -6,6 +6,7 @@ import { featureImageUpload } from "../../middlewares/imageUpload";
 import { addProduct } from "../../controllers/provider/addProduct";
 import { showProviderProducts } from "../../controllers/provider/showProviderProducts";
 import { deleteProduct } from "../../controllers/provider/deleteProduct";
+// import createRateLimiter from "../../middlewares/limitRequests";
 
 const router = Router();
 

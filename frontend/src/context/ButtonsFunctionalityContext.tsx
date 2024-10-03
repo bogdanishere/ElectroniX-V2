@@ -8,10 +8,9 @@ interface ButtonsFunctionalityContextType {
   openWishList: boolean;
   setOpenWishList: (value: boolean) => void;
   openReview: boolean;
-
-
-
   setOpenReview: (value: boolean) => void;
+  openModifyProfilePicture: boolean;
+  setOpenModifyProfilePicture: (value: boolean) => void;
 }
 
 export const ButtonsFunctionalityContext = createContext<
@@ -26,6 +25,9 @@ export default function ButtonsFunctionalityProvider({
   const [openWishList, setOpenWishList] = useState(false);
   const [openCardList, setOpenCardList] = useState(false);
   const [openReview, setOpenReview] = useState(false);
+  const [openModifyProfilePicture, setOpenModifyProfilePicture] =
+    useState(false);
+
   return (
     <ButtonsFunctionalityContext.Provider
       value={{
@@ -35,6 +37,8 @@ export default function ButtonsFunctionalityProvider({
         setOpenWishList,
         openReview,
         setOpenReview,
+        openModifyProfilePicture,
+        setOpenModifyProfilePicture,
       }}
     >
       {children}

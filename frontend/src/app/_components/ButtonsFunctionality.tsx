@@ -11,11 +11,15 @@ export function ButtonsFunctionality() {
     setOpenWishList,
     openReview,
     setOpenReview,
+    openModifyProfilePicture,
+    setOpenModifyProfilePicture,
   } = useButtonsFunctionality();
 
   const toggleShopping = () => setOpenCardList(!openCardList);
   const toggleWishies = () => setOpenWishList(!openWishList);
   const toggleReview = () => setOpenReview(!openReview);
+  const toggleModifyProfilePicture = () =>
+    setOpenModifyProfilePicture(!openModifyProfilePicture);
 
   return (
     <>
@@ -34,6 +38,15 @@ export function ButtonsFunctionality() {
       <Modal isOpen={openReview} onClose={toggleReview}>
         <Modal.Window>
           <Modal.AddReview />
+        </Modal.Window>
+      </Modal>
+
+      <Modal
+        isOpen={openModifyProfilePicture}
+        onClose={toggleModifyProfilePicture}
+      >
+        <Modal.Window>
+          <Modal.ModifyProfilePicture />
         </Modal.Window>
       </Modal>
     </>

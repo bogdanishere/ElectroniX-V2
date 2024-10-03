@@ -1,4 +1,4 @@
-// import { getTokenUsernameProfilePic } from "@/helpers/getUserDetails";
+import { getTokenUsernameProfilePic } from "@/helpers/getUserDetails";
 import NavBar from "./NavBar";
 import NavbarLoginOptions from "./NavbarLoginOptions";
 import { auth } from "@/auth";
@@ -9,15 +9,15 @@ export default async function FullNavbar() {
 
   const cookiesLogin = cookies().get("login");
 
-  // const {
-  //   token,
-  //   clientUsername: username,
-  //   imageProfile,
-  // } = await getTokenUsernameProfilePic();
+  const { imageProfile } = await getTokenUsernameProfilePic();
 
   return (
     <NavBar>
-      <NavbarLoginOptions cookiesLogin={cookiesLogin} session={session} />
+      <NavbarLoginOptions
+        cookiesLogin={cookiesLogin}
+        session={session}
+        imageProfile={imageProfile}
+      />
     </NavBar>
   );
 }

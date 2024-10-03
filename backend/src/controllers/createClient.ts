@@ -22,7 +22,7 @@ export const createNewClient: RequestHandler = async (req, res, next) => {
     const users = await sql`SELECT * FROM users WHERE username = ${username}`;
 
     if (users.length > 0) {
-      return res.status(400).json({ message: "Client already exists!" });
+      return res.status(429).json({ message: "Client already exists!" });
     }
 
     const hashedPassword = bcrypt.hashSync(password, 8);

@@ -75,3 +75,26 @@ export async function deleteOrder({
   );
   return response.data;
 }
+
+export async function addProvider(
+  providerName: string,
+  providerEmail: string,
+  providerPassword: string,
+  employeeUsername: string,
+  token: string
+) {
+  const response = await api.post(
+    `/employee/addprovider?username=${employeeUsername}`,
+    {
+      name: providerName,
+      email: providerEmail,
+      password: providerPassword,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+}

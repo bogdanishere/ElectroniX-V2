@@ -16,8 +16,11 @@ import * as search from "@/network/api/search";
 import * as employeeRequests from "@/network/api/employee";
 import * as providerRequests from "@/network/api/provider";
 
+import * as update from "@/network/api/updateProfile";
+
 import { revalidatePath } from "next/cache";
 import { getTokenUsernameProfilePic } from "@/helpers/getUserDetails";
+import { ConflictError, NotFoundError } from "@/network/http-errors";
 
 export async function loginGoogle() {
   await signIn("google", {
@@ -36,29 +39,26 @@ export async function loginEmail(data: FormData) {
   const password = data.get("password") as string;
 
   if (!email || !password) {
-    return redirect(`/errorpage?error=${"Email and password are mandatory"}`);
+    return redirect(`/login?error=${"Email and password are mandatory"}`);
   }
 
-  const res: ResponseLogin = await authentification.loginClient(
-    email,
-    password
-  );
+  try {
+    const res: ResponseLogin = await authentification.loginClient(
+      email,
+      password
+    );
+    cookies().set("login", JSON.stringify(res), {
+      secure: true,
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
+    });
 
-  if (!res) {
-    return redirect(`/errorpage?error=${"InvalidCredentials"}`);
+    return redirect("/electronix/1");
+  } catch (error) {
+    if (error instanceof NotFoundError) {
+      return redirect(`/login?error=${"Invalid credentials"}`);
+    }
   }
-
-  cookies().set("login", JSON.stringify(res), {
-    secure: true,
-    httpOnly: true,
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days
-  });
-
-  if (res.type === "employee") {
-    return redirect("/employee");
-  }
-
-  redirect("/electronix/1");
 }
 
 export async function logout() {
@@ -75,29 +75,32 @@ export async function register(data: FormData) {
   const firstName = data.get("firstName") as string;
   const lastName = data.get("lastName") as string;
 
-  const res = await authentification.registerClient(
-    username,
-    password,
-    email,
-    firstName,
-    lastName
-  );
-
   if (!username || !password || !email || !firstName || !lastName) {
-    return redirect(`/errorpage?error=${"Add all fields"}`);
+    return redirect(
+      `/register?error=${"There is one field missing.Please retry again"}`
+    );
   }
 
-  if (!res) {
-    return redirect(`/errorpage?error=${"InvalidData"}`);
+  try {
+    const res = await authentification.registerClient(
+      username,
+      password,
+      email,
+      firstName,
+      lastName
+    );
+    cookies().set("login", JSON.stringify(res), {
+      secure: true,
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    });
+
+    redirect("/electronix/1");
+  } catch (error) {
+    if (error instanceof ConflictError) {
+      return redirect(`/register?error=${"Username already exists"}`);
+    }
   }
-
-  cookies().set("login", JSON.stringify(res), {
-    secure: true,
-    httpOnly: true,
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-  });
-
-  redirect("/electronix/1");
 }
 
 export async function addAddress(data: FormData) {
@@ -111,8 +114,7 @@ export async function addAddress(data: FormData) {
     return redirect(`/errorpage?error=${"InvalidData"}`);
   }
 
-  const { token, clientUsername: username } =
-    await getTokenUsernameProfilePic();
+  const { token, username } = await getTokenUsernameProfilePic();
 
   if (!username) {
     redirect("/login");
@@ -136,8 +138,7 @@ export async function addAddress(data: FormData) {
 }
 
 export async function checkAddress() {
-  const { token, clientUsername: username } =
-    await getTokenUsernameProfilePic();
+  const { token, username } = await getTokenUsernameProfilePic();
 
   if (!username) {
     redirect("/login");
@@ -162,8 +163,11 @@ export async function checkAddress() {
 }
 
 export async function paymentStripe(price: number, currency: string) {
-  const { token, clientUsername: username } =
-    await getTokenUsernameProfilePic();
+  const { token, username } = await getTokenUsernameProfilePic();
+
+  if (!username || !token) {
+    return redirect("/login");
+  }
 
   const res = await command.paymentStripe(+price, currency, token, username);
 
@@ -184,19 +188,13 @@ export async function commandConfirm(
   products: ObjectProducts,
   sessionId: string
 ) {
-  const { token, clientUsername } = await getTokenUsernameProfilePic();
+  const { token, username } = await getTokenUsernameProfilePic();
 
-  const res = await command.addCommand(
-    clientUsername,
-    products,
-    sessionId,
-    token,
-    clientUsername
-  );
-
-  if (!res) {
-    return redirect(`/fatalerrorpage`);
+  if (!username || !token) {
+    return redirect("/login");
   }
+
+  await command.addCommand(username, products, sessionId, token, username);
 
   revalidatePath("/orders");
 }
@@ -216,13 +214,9 @@ export async function searchProducts(
 }
 
 export async function getOrders() {
-  const { token, clientUsername } = await getTokenUsernameProfilePic();
+  const { token, username } = await getTokenUsernameProfilePic();
 
-  const res = await command.getOrders(clientUsername, token);
-
-  if (!res) {
-    return redirect(`/fatalerrorpage`);
-  }
+  const res = await command.getOrders(username, token);
 
   return res;
 }
@@ -242,63 +236,49 @@ export async function postReview({
     return;
   }
 
-  const { token, clientUsername } = await getTokenUsernameProfilePic();
-  if (!clientUsername || !token) {
+  const { token, username } = await getTokenUsernameProfilePic();
+  if (!username || !token) {
     return redirect(`/login`);
   }
 
-  const res = await reviewApi.addReview({
-    productID,
-    title,
-    review,
-    clientUsername,
-    rating,
-    token,
-  });
+  try {
+    const res = await reviewApi.addReview({
+      productID,
+      title,
+      review,
+      username,
+      rating,
+      token,
+    });
 
-  if (!res) {
-    return;
+    revalidatePath(`/product/${productID}`);
+
+    return res;
+  } catch (error) {
+    return redirect(`/errorpage?error=${"InvalidData"}`);
   }
-
-  revalidatePath(`/product/${productID}`);
-
-  return res;
 }
 
 export async function getOrdersEmployee(employee: string, token: string) {
   const res = await employeeRequests.getOrders({ employee, token });
 
-  if (!res) {
-    return redirect(`/fatalerrorpage`);
-  }
-
   return res;
 }
 
 export async function getBrandCount(numberOfBrands: number) {
-  const { token, clientUsername: employee } =
-    await getTokenUsernameProfilePic();
+  const { token, username: employee } = await getTokenUsernameProfilePic();
   const res = await employeeRequests.getBrandCount({
     numberOfBrands,
     employee,
     token,
   });
 
-  if (!res) {
-    return redirect(`/fatalerrorpage`);
-  }
-
   return res;
 }
 
 export async function confirmOrder({ orderID }: { orderID: number }) {
-  const { token, clientUsername: employee } =
-    await getTokenUsernameProfilePic();
+  const { token, username: employee } = await getTokenUsernameProfilePic();
   const res = await employeeRequests.confirmOrder({ orderID, employee, token });
-
-  if (!res) {
-    return redirect(`/fatalerrorpage`);
-  }
 
   revalidatePath("/employee");
 
@@ -306,14 +286,46 @@ export async function confirmOrder({ orderID }: { orderID: number }) {
 }
 
 export async function deleteOrder({ orderID }: { orderID: number }) {
-  const { clientUsername: username, token } =
-    await getTokenUsernameProfilePic();
+  const { username: username, token } = await getTokenUsernameProfilePic();
 
   const res = await employeeRequests.deleteOrder({ orderID, token, username });
 
-  if (!res) {
-    return redirect(`/fatalerrorpage`);
+  revalidatePath("/employee");
+
+  return res;
+}
+
+export async function addProvider(data: FormData) {
+  const { token, username: employeeUsername } =
+    await getTokenUsernameProfilePic();
+
+  const providerName = data.get("providerName") as string;
+  const providerEmail = data.get("providerEmail") as string;
+  const providerPassword = data.get("providerPassword") as string;
+  const confirmPassword = data.get("confirmPassword") as string;
+
+  if (
+    !providerName ||
+    !providerEmail ||
+    !providerPassword ||
+    !confirmPassword
+  ) {
+    return redirect(`/errorpage?error=${"Add all fields"}`);
   }
+
+  if (providerPassword !== confirmPassword) {
+    return redirect(`/errorpage?error=${"Passwords do not match"}`);
+  }
+
+  console.log("providerName", providerName);
+
+  const res = await employeeRequests.addProvider(
+    providerName,
+    providerEmail,
+    providerPassword,
+    employeeUsername,
+    token
+  );
 
   revalidatePath("/employee");
 
@@ -321,30 +333,38 @@ export async function deleteOrder({ orderID }: { orderID: number }) {
 }
 
 export async function addProviderProduct(formData: FormData) {
-  const { clientUsername: providerUsername, token } =
+  const { username: providerUsername, token } =
     await getTokenUsernameProfilePic();
-  const res = await providerRequests.addProviderProduct(
-    formData,
-    token,
-    providerUsername
-  );
 
-  if (!res) {
-    return redirect(`/fatalerrorpage`);
+  if (!providerUsername || !token) {
+    return redirect("/login");
+  }
+
+  if (!formData) {
+    return redirect(`/errorpage?error=${"InvalidData"}`);
+  }
+
+  try {
+    await providerRequests.addProviderProduct(
+      formData,
+      token,
+      providerUsername
+    );
+  } catch (error) {
+    redirect(`/errorpage?error=${"InvalidData"}`);
   }
 
   revalidatePath(`/provider/${formData.get("page")}`);
 }
 
 export async function showOrdersProvider() {
-  const { clientUsername: username, token } =
-    await getTokenUsernameProfilePic();
+  const { username, token } = await getTokenUsernameProfilePic();
+
+  if (!username || !token) {
+    return redirect("/login");
+  }
 
   const res = await providerRequests.getProviderOrders(username, token);
-
-  if (!res) {
-    return redirect(`/fatalerrorpage`);
-  }
 
   return res;
 }
@@ -353,17 +373,16 @@ export async function confirmProviderOrder(
   orderDetailId: number,
   page: number | string
 ) {
-  const { clientUsername: username, token } =
-    await getTokenUsernameProfilePic();
+  const { username, token } = await getTokenUsernameProfilePic();
+  if (!username || !token) {
+    return redirect("/login");
+  }
+
   const res = await providerRequests.confirmProviderOrder(
     orderDetailId,
     token,
     username
   );
-
-  if (!res) {
-    return redirect(`/fatalerrorpage`);
-  }
 
   revalidatePath(`/provider/${page}`);
 
@@ -374,32 +393,35 @@ export async function deleteProviderOrder(
   orderDetailId: number,
   page: number | string
 ) {
-  const { clientUsername: username, token } =
-    await getTokenUsernameProfilePic();
-  const res = await providerRequests.deleteProviderOrder(
-    orderDetailId,
-    token,
-    username
-  );
+  const { username, token } = await getTokenUsernameProfilePic();
 
-  if (!res) {
-    return redirect(`/fatalerrorpage`);
+  if (!username || !token) {
+    return redirect("/login");
   }
 
-  revalidatePath(`/provider/${page}`);
+  try {
+    const res = await providerRequests.deleteProviderOrder(
+      orderDetailId,
+      token,
+      username
+    );
 
-  return res;
+    revalidatePath(`/provider/${page}`);
+
+    return res;
+  } catch (error) {
+    return redirect(`/errorpage?error=${"InvalidData"}`);
+  }
 }
 
 export async function getProviderProducts(page: number) {
-  const { clientUsername: username, token } =
-    await getTokenUsernameProfilePic();
+  const { username, token } = await getTokenUsernameProfilePic();
+
+  if (!username || !token) {
+    return redirect("/login");
+  }
 
   const res = await providerRequests.getProviderProducts(username, token, page);
-
-  if (!res) {
-    return redirect(`/fatalerrorpage`);
-  }
 
   return res;
 }
@@ -408,8 +430,11 @@ export async function deleteProviderProduct(
   productId: string,
   page: number | string
 ) {
-  const { clientUsername: username, token } =
-    await getTokenUsernameProfilePic();
+  const { username, token } = await getTokenUsernameProfilePic();
+
+  if (!username || !token) {
+    return redirect("/login");
+  }
 
   const res = await providerRequests.deleteProviderProduct(
     productId,
@@ -417,11 +442,36 @@ export async function deleteProviderProduct(
     username
   );
 
-  if (!res) {
-    return redirect(`/fatalerrorpage`);
-  }
-
   revalidatePath(`/provider/${page}`);
 
   return res;
+}
+
+export async function updateProfile(profileImage: FormData) {
+  const { username, token } = await getTokenUsernameProfilePic();
+
+  if (!username || !token) {
+    return redirect("/login");
+  }
+
+  const res = await update.updateProfile(username, token, profileImage);
+
+  const loginCookies = cookies().get("login");
+
+  const loginCookiesValue = loginCookies?.value || "{}";
+
+  console.log("loginCookiesValue", loginCookiesValue);
+
+  cookies().set(
+    "login",
+    JSON.stringify({
+      ...JSON.parse(loginCookiesValue),
+      image: res.image_profile,
+    }),
+    {
+      secure: true,
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    }
+  );
 }

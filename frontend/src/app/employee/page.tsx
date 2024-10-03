@@ -1,9 +1,11 @@
-import { getBrandCount, getOrdersEmployee } from "../_lib/actions";
+import { addProvider, getBrandCount, getOrdersEmployee } from "../_lib/actions";
 import { formatDate } from "@/utils/formatDate";
 import AcceptRejectCommandsByEmployee from "../_components/AcceptRejectCommandsByEmployee";
 import SatisticsForEmployee from "../_components/SatisticsForEmployee";
 import { verifyRestriction } from "@/helpers/verifyRestriction";
 import { getTokenUsernameProfilePic } from "@/helpers/getUserDetails";
+import InputField from "@/utils/InputField";
+import Button from "@/utils/Button";
 
 interface OrdersProps {
   orders: OrdersProp[];
@@ -26,8 +28,7 @@ interface BrandSatisticsProps {
 export default async function Page() {
   await verifyRestriction("employee");
 
-  const { clientUsername: username, token } =
-    await getTokenUsernameProfilePic();
+  const { username, token } = await getTokenUsernameProfilePic();
 
   const orders: OrdersProps = (await getOrdersEmployee(username, token)) || [];
 
@@ -70,6 +71,10 @@ export default async function Page() {
         </div>
       )}
 
+      <div className="pt-7 flex justify-center items-center">
+        <AddProvider />
+      </div>
+
       <div className="pt-9 flex justify-center items-center">
         <SatisticsForEmployee
           dataStatistics={brandSatistics.brands.map((brand) => ({
@@ -81,6 +86,31 @@ export default async function Page() {
           height={400}
         />
       </div>
+    </div>
+  );
+}
+
+function AddProvider() {
+  return (
+    <div className="max-w-md mx-auto mt-10 p-8">
+      <h2 className="text-2xl font-bold mb-6 text-center text-gray-900">
+        Add Provider
+      </h2>
+      <form action={addProvider} className="w-72">
+        <InputField name="providerName" label="Provider Name" type={"text"} />
+        <InputField name="providerEmail" label="Provider Email" type={"text"} />
+        <InputField
+          name="providerPassword"
+          label="Provider Password"
+          type={"password"}
+        />
+        <InputField
+          name="confirmPassword"
+          label="Confirm Password"
+          type={"password"}
+        />
+        <Button type="submit">Add Provider</Button>
+      </form>
     </div>
   );
 }

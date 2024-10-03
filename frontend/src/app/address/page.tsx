@@ -3,14 +3,18 @@ import Button from "@/utils/Button";
 import { addAddress, checkAddress } from "../_lib/actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import ErrorLogin from "../_components/ErrorLogin";
+import ErrorField from "../_components/ErrorField";
 
 export const metadata = {
   title: "Electronix - Address",
   description: "Electronix - Please type your address",
 };
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { error: string };
+}) {
   const addressExist = await checkAddress();
 
   if (addressExist) return redirect("/commands");
@@ -24,7 +28,7 @@ export default async function Page() {
         <InputField name="country" type="country" label="Country" />
         <InputField name="postal_code" type="postal_code" label="Postal Code" />
         <InputField name="state" type="state" label="State" />
-        <ErrorLogin />
+        <ErrorField error={searchParams.error} />
         <div className="flex justify-between">
           <Button type="submit">Submit</Button>
           <Link href="/electronix/1">

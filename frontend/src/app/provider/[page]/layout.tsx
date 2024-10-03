@@ -1,3 +1,4 @@
+import { ButtonsFunctionality } from "@/app/_components/ButtonsFunctionality";
 import NavbarAdmins from "@/app/_components/NavbarAdmins";
 import { ReactNode } from "react";
 
@@ -15,6 +16,7 @@ export default async function RootLayout({
   return (
     <div>
       <NavbarAdmins />
+      <ButtonsFunctionality />
       {children}
     </div>
   );
