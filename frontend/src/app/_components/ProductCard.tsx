@@ -65,6 +65,8 @@ export default function ProductCard({
     }
   });
 
+  console.log("imageSrc", imageSrc);
+
   function handleImageError() {
     setImageSrc("https://via.placeholder.com/300");
   }
