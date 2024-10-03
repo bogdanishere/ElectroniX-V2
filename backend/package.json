@@ -5,7 +5,11 @@
   "scripts": {
     "start": "nodemon src/server.ts",
     "lint": "eslint . --ext .ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf dist && tsc",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist",
+    "vercel-build": "echo hello"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +32,8 @@
     "install": "^0.13.0",
     "nodemon": "^3.1.4",
     "npm": "^10.8.3",
+    "pre-commit": "^1.2.2",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.1.0"
@@ -51,5 +57,10 @@
     "sharp": "^0.33.5",
     "stripe": "^16.12.0",
     "ts_express": "file:"
-  }
+  },
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ]
 }

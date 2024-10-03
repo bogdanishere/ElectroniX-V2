@@ -37,6 +37,10 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Hello from server" });
+});
+
 app.use("/auth", authentification);
 app.use("/products", products);
 app.use("/review", review);
