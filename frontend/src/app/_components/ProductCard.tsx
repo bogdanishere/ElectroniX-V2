@@ -1,7 +1,6 @@
 "use client";
 
 import { FaHeart } from "react-icons/fa";
-
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -76,8 +75,8 @@ export default function ProductCard({
   }, [currency, currencySelectedByUser, price]);
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="max-w-xs border border-gray-300 rounded-lg overflow-hidden font-sans">
+    <div className="flex flex-col gap-2 w-full">
+      <div className="w-full max-w-xs mx-auto border border-gray-300 rounded-lg overflow-hidden font-sans shadow-md hover:shadow-lg transition-shadow duration-300">
         <div className="text-center bg-white">
           <Link href={`/product/${product_id}`}>
             <Image
@@ -85,29 +84,29 @@ export default function ProductCard({
               alt={name}
               width={300}
               height={300}
-              className="w-72 h-72 p-8 object-contain"
+              className="w-full h-48 sm:h-56 md:h-64 lg:h-72 p-4 object-contain"
               onError={handleImageError}
             />
           </Link>
         </div>
         <div className="p-2 flex justify-between items-center">
-          <span className="bg-red-500 text-white text-xs flex justify-center items-center py-1 px-2 rounded-full">
+          <span className="bg-red-500 text-white text-xs flex justify-center items-center py-1 px-2 rounded-full truncate max-w-[70%]">
             {provider.slice(0, 17).toUpperCase()}
           </span>
           <FaHeart
-            className="text-2xl cursor-pointer"
+            className="text-xl sm:text-2xl cursor-pointer text-gray-400 hover:text-red-500 transition-colors duration-300"
             onClick={() =>
               handleAddToWishlist(product_id, name, provider, price)
             }
           />
         </div>
-        <div className="relative flex justify-center group">
-          <span className="group-hover:block hidden absolute bottom-full mb-2 p-2 bg-gray-800 text-white text-sm rounded">
+        <div className="relative flex justify-center group px-2">
+          <span className="group-hover:block hidden absolute bottom-full mb-2 p-2 bg-gray-800 text-white text-xs sm:text-sm rounded z-10 max-w-[90%] truncate">
             {name}
           </span>
-          {name.slice(0, 20)}...
+          <p className="text-sm sm:text-base truncate">{name}</p>
         </div>
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2 my-2">
           <span className="text-yellow-500">
             <StarRating
               size={16}
@@ -118,18 +117,18 @@ export default function ProductCard({
               cursor="default"
             />
           </span>
-          <span className="text-gray-600 text-sm">
+          <span className="text-gray-600 text-xs sm:text-sm">
             {rating} ({numberOfRatings})
           </span>
         </div>
-        <div className="flex items-center justify-center">
-          <span className="text-red-500 text-lg font-bold">
+        <div className="flex items-center justify-center mb-2">
+          <span className="text-red-500 text-base sm:text-lg font-bold">
             {formatCurrency(+currencyPrice, currencySelectedByUser)}
           </span>
         </div>
         <div className="p-2 bg-gray-100 text-center">
           <button
-            className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 hover:bg-blue-400"
+            className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-sm sm:text-base"
             onClick={() => handleAddToCart(product_id, name, provider, price)}
           >
             Add to cart

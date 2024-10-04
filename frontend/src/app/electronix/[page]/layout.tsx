@@ -18,7 +18,7 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <FullNavbar />
       <div className="grid grid-cols-[16rem_1fr] grid-rows-[auto_1fr] h-screen bg-gray-300">
         <Sidebar />

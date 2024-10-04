@@ -28,40 +28,64 @@ export default async function Page({
   }
 
   return (
-    <div>
-      <div className="w-screen h-screen flex justify-center items-center flex-col bg-gray-50">
-        <form action={register} className="grid grid-cols-1 w-[500px]">
-          <InputField name="firstName" type="firstName" label="First Name" />
-          <InputField name="lastName" type="lastName" label="Last Name" />
-          <InputField name="username" type="username" label="Username" />
-          <InputField name="email" type="email" label="Email" />
-          <InputField name="password" type="password" label="Password" />
-          <ErrorField error={searchParams.error} />
+    <div className="w-screen h-screen flex justify-center items-center bg-gray-50 p-4 flex-col">
+      <form
+        action={register}
+        className="bg-white shadow-md rounded-lg p-6 w-full max-w-md sm:max-w-lg lg:max-w-xl"
+      >
+        <h2 className="text-2xl font-semibold mb-6 text-center">
+          Create an Account
+        </h2>
+        <InputField
+          name="firstName"
+          type="text"
+          label="First Name"
+          className="mb-4"
+        />
+        <InputField
+          name="lastName"
+          type="text"
+          label="Last Name"
+          className="mb-4"
+        />
+        <InputField
+          name="username"
+          type="text"
+          label="Username"
+          className="mb-4"
+        />
+        <InputField name="email" type="email" label="Email" className="mb-4" />
+        <InputField
+          name="password"
+          type="password"
+          label="Password"
+          className="mb-4"
+        />
+        {searchParams.error && <ErrorField error={searchParams.error} />}
 
-          <div className="flex justify-between">
-            <Button type="submit" className="w-24">
-              Submit
-            </Button>
-            <Link href="/login">
-              <Button className="text-primary-300">
-                Connect with your account
-              </Button>
-            </Link>
-          </div>
-        </form>
-
-        <form action={loginGoogle} className="pt-9">
-          <Button className="flex items-center gap-6 text-lg border border-primary-300 px-10 py-4 font-medium">
-            <Image
-              src="https://authjs.dev/img/providers/google.svg"
-              alt="Google logo"
-              height={24}
-              width={24}
-            />
-            <span>Continue with Google</span>
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+          <Button type="submit" className="w-full sm:w-1/3">
+            Submit
           </Button>
-        </form>
-      </div>
+          <Link href="/login" className="w-full sm:w-1/3">
+            <Button className="w-full text-primary-300">
+              Connect with your account
+            </Button>
+          </Link>
+        </div>
+      </form>
+
+      <form action={loginGoogle} className="pt-6">
+        <Button className="flex items-center gap-4 sm:gap-6 text-lg border border-primary-300 px-6 py-3 rounded-md font-medium shadow-md">
+          <Image
+            src="https://authjs.dev/img/providers/google.svg"
+            alt="Google logo"
+            height={24}
+            width={24}
+          />
+          <span>Continue with Google</span>
+        </Button>
+      </form>
     </div>
   );
 }

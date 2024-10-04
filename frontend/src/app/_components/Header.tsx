@@ -1,5 +1,5 @@
 export default function Header({
-  text = "Welcome to our shop, ElectroniX",
+  text = "Welcome to our shop",
 }: {
   text?: string;
 }) {
