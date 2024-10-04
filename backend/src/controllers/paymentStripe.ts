@@ -23,8 +23,8 @@ export const paymentStripe: RequestHandler = async (req, res, next) => {
         },
       ],
       mode: "payment",
-      success_url: `http://localhost:3000/success/?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `http://localhost:3000/cancel`,
+      success_url: `${env.FRONTEND_URL}/success/?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${env.FRONTEND_URL}/cancel`,
     });
 
     const sameId = await paymentIdStripeVerification.findOne({
