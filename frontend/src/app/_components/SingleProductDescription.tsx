@@ -240,7 +240,7 @@ export default function SingleProductDescription({
       <div>
         <ol className="flex flex-col md:flex-row justify-around text-lg md:text-xl lg:text-2xl gap-8 md:gap-4">
           <li className="flex justify-center flex-col gap-3 md:gap-5">
-            <div className="text-center">Adaugati-va produsul acum</div>
+            <div className="text-center">Add the product now</div>
             <div className="text-center">
               <Button
                 className="w-full md:w-64"
@@ -248,7 +248,7 @@ export default function SingleProductDescription({
                   handleAddToCart(product_id, name, provider, price)
                 }
               >
-                Adauga in cos
+                Add to cart
               </Button>
             </div>
             <div className="text-center">
@@ -258,14 +258,12 @@ export default function SingleProductDescription({
                   handleAddToWishlist(product_id, name, provider, price)
                 }
               >
-                Adauga la Favorite
+                Add to favorites
               </Button>
             </div>
           </li>
           <li className="flex flex-col gap-3 md:gap-5">
-            <div className="text-center">
-              Notele acordate de catre utilizatori
-            </div>
+            <div className="text-center">Ratings by Users</div>
             <div className="flex gap-4 justify-center">
               <StarRating
                 size={24}
@@ -281,14 +279,15 @@ export default function SingleProductDescription({
             </div>
           </li>
           <li className="flex flex-col gap-3 md:gap-5 text-center">
-            <div>Detii sau ai utilizat produsul?</div>
-            <div>Spune-ti parerea acordand o nota produsului</div>
+            <div>Do you own or have you used this product?</div>
+            <div>Share your opinion by rating the product</div>
+
             <div className="text-center">
               <Button
                 className="w-full md:w-64"
                 onClick={() => setOpenReview(true)}
               >
-                Adauga un review
+                Add a review
               </Button>
             </div>
           </li>

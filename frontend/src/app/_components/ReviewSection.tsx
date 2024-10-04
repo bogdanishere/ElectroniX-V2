@@ -28,7 +28,7 @@ export default async function ReviewSection({
       {reviews.review.length > 0 ? (
         <>
           <h1 className="text-center text-xl sm:text-2xl mb-4 sm:mb-6">
-            Cum este văzut de către alți utilizatori
+            How our clients rated this product
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {reviews.review.map((review, index) => {
@@ -62,7 +62,7 @@ export default async function ReviewSection({
         </>
       ) : (
         <h1 className="text-center text-xl sm:text-2xl">
-          Momentan nu avem review-uri la acest produs
+          We don&apos;t have any reviews for this product
         </h1>
       )}
     </div>

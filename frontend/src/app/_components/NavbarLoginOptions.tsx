@@ -48,8 +48,8 @@ export default function NavbarLoginOptions({
   return (
     <>
       {isConnected ? (
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-2">
-          <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full overflow-hidden">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-4">
+          <div className="w-12 h-auto sm:w-20 sm:h-20 rounded-full overflow-hidden">
             <Image
               src={imageProfile ?? defaultImage}
               alt="user"
@@ -66,20 +66,17 @@ export default function NavbarLoginOptions({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 pl-4">
+        <div className="flex flex-row items-center justify-center gap-4 pl-4 py-5 sm:py-0">
+          {" "}
           <Link href="/login">
-            <div className="w-full sm:w-32">
-              <Button type="button" className="w-full sm:w-32">
-                Login
-              </Button>
-            </div>
+            <Button type="button" className="w-auto">
+              Login
+            </Button>
           </Link>
           <Link href="/register">
-            <div className="w-full sm:w-32">
-              <Button type="button" className="w-full sm:w-32">
-                Register
-              </Button>
-            </div>
+            <Button type="button" className="w-auto">
+              Register
+            </Button>
           </Link>
         </div>
       )}
