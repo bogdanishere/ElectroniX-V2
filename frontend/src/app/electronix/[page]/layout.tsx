@@ -8,7 +8,7 @@ import { ReactNode } from "react";
 
 export const metadata = {
   title: {
-    template: "%s -  Electronix",
+    template: "%s - Electronix",
     default: "Electronix",
   },
   description: "Electronix is a marketplace for electronics",
@@ -20,7 +20,7 @@ export default async function RootLayout({
   return (
     <div className="flex flex-col min-h-screen">
       <FullNavbar />
-      <div className="grid grid-cols-[16rem_1fr] grid-rows-[auto_1fr] h-screen bg-gray-300">
+      <div className="grid grid-cols-[8rem_1fr] md:grid-cols-[16rem_1fr] grid-rows-[auto_1fr] h-screen bg-gray-300">
         <Sidebar />
         <ButtonsFunctionality />
         <Header />

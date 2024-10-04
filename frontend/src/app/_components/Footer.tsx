@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
           <div className="flex flex-col items-center sm:items-start justify-center col-span-1 sm:col-span-2 lg:col-span-1">
-            <Link className="mb-4 md:mb-8" href="electronix/1">
+            <Link className="mb-4 md:mb-8" href="/electronix/1">
               <Image
                 className="block w-full max-w-[200px] md:max-w-[300px]"
                 alt="ElectroniX logo"

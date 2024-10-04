@@ -23,6 +23,7 @@ import createHttpError from "http-errors";
 import { verifyEmployeeToken } from "./middlewares/verifyTokenEmployee";
 import { verifyProviderToken } from "./middlewares/verifyTokenProvider";
 import { verifyTokenUsers } from "./middlewares/verifyTokenUsers";
+import limiter from "./middlewares/limitRequests";
 
 const app = express();
 
@@ -36,6 +37,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(limiter);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Hello from server" });

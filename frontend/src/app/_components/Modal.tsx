@@ -345,8 +345,7 @@ function AddReview() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">Adauga un review pentru:</h1>
-      <h2 className="text-xl font-semibold">Product Name</h2>
+      <h1 className="text-2xl font-bold">Add a new review</h1>
       <StarRating
         size={32}
         defaultRating={Number(reviewStar)}
@@ -354,21 +353,21 @@ function AddReview() {
         onSetRatingHandle={(rating) => setReviewStar(rating)}
       />
       <div className="flex flex-col gap-2">
-        <h3 className="font-semibold">Titlu review:</h3>
+        <h3 className="font-semibold">Review title:</h3>
         <input
           type="text"
-          placeholder="Foloseste o sugestie sau scrie propriul titlu"
+          placeholder="Title"
           className="w-full p-2 rounded-md border border-gray-300"
           value={valueInput}
           onChange={(e) => setValueInput(e.target.value)}
         />
       </div>
       <div className="flex space-x-2">
-        <Button onClick={() => setValueInput("Multumit")}>Multumit</Button>
-        <Button onClick={() => setValueInput("Imi place")}>Imi place</Button>
-        <Button onClick={() => setValueInput("Merita")}>Merita</Button>
-        <Button onClick={() => setValueInput("Bun")}>Bun</Button>
-        <Button onClick={() => setValueInput("Rezonabil")}>Rezonabil</Button>
+        <Button onClick={() => setValueInput("Satisfied")}>Satisfied</Button>
+        <Button onClick={() => setValueInput("I like it")}>I like it</Button>
+        <Button onClick={() => setValueInput("Worth it")}>Worth it</Button>
+        <Button onClick={() => setValueInput("Good")}>Good</Button>
+        <Button onClick={() => setValueInput("Reasonable")}>Reasonable</Button>
       </div>
       <textarea
         rows={4}
@@ -377,7 +376,7 @@ function AddReview() {
         onChange={(e) => setValueTextarea(e.target.value)}
       />
       <div className="flex justify-between">
-        <Button onClick={handleSendReview}>Adauga review</Button>
+        <Button onClick={handleSendReview}>Add a review</Button>
       </div>
     </div>
   );
