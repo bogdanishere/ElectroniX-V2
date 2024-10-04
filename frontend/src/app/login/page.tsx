@@ -24,25 +24,39 @@ export default async function Page({
   }
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center flex-col bg-gray-50">
-      <form action={loginEmail} className="grid grid-cols-1 w-[500px]">
-        <InputField name="email" type="email" label="Email" />
+    <div className="w-screen h-screen flex justify-center items-center bg-gray-50 p-4 flex-col">
+      <form
+        action={loginEmail}
+        className="bg-white shadow-md rounded-lg p-6 w-full max-w-md sm:max-w-lg lg:max-w-xl"
+      >
+        <h2 className="text-2xl font-semibold mb-6 text-center">
+          Login to Electronix
+        </h2>
+        <InputField name="email" type="email" label="Email" className="mb-4" />
         {searchParams.error && <ErrorField error={searchParams.error} />}
 
-        <InputField name="password" type="password" label="Password" />
+        <InputField
+          name="password"
+          type="password"
+          label="Password"
+          className="mb-4"
+        />
         {searchParams.error && <ErrorField error={searchParams.error} />}
 
-        <div className="flex justify-between">
-          <Button type="submit" className="w-24">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+          <Button type="submit" className="w-full sm:w-1/3">
             Submit
           </Button>
-          <Link href="/register">
-            <Button className="text-primary-300">Create an account</Button>
+          <Link href="/register" className="w-full sm:w-1/3">
+            <Button className="w-full text-primary-300">
+              Create an account
+            </Button>
           </Link>
         </div>
       </form>
-      <form action={loginGoogle} className="pt-9">
-        <Button className="flex items-center gap-6 text-lg border border-primary-300 px-10 py-4 font-medium">
+
+      <form action={loginGoogle} className="pt-6">
+        <Button className="flex items-center gap-4 sm:gap-6 text-lg border border-primary-300 px-6 py-3 rounded-md font-medium shadow-md">
           <Image
             src="https://authjs.dev/img/providers/google.svg"
             alt="Google logo"

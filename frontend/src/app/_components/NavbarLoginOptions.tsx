@@ -48,35 +48,35 @@ export default function NavbarLoginOptions({
   return (
     <>
       {isConnected ? (
-        <>
-          <div className="flex items-center justify-center pl-10">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-2">
+          <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full overflow-hidden">
             <Image
               src={imageProfile ?? defaultImage}
               alt="user"
               onClick={() => setOpenModifyProfilePicture(true)}
-              width={59}
-              height={59}
-              className="rounded-full"
+              width={60}
+              height={60}
+              className="object-cover p-5 w-full h-full"
             />
           </div>
-          <div className="pl-5">
-            <Button onClick={handleLogout} className="w-32">
+          <div className="pl-0 sm:pl-5">
+            <Button onClick={handleLogout} className="w-full sm:w-32">
               Logout
             </Button>
           </div>
-        </>
+        </div>
       ) : (
-        <div className="flex gap-5">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 pl-4">
           <Link href="/login">
-            <div className="pl-10 w-32">
-              <Button type="button" className="w-32">
+            <div className="w-full sm:w-32">
+              <Button type="button" className="w-full sm:w-32">
                 Login
               </Button>
             </div>
           </Link>
           <Link href="/register">
-            <div className="w-32">
-              <Button type="button" className="w-32">
+            <div className="w-full sm:w-32">
+              <Button type="button" className="w-full sm:w-32">
                 Register
               </Button>
             </div>
