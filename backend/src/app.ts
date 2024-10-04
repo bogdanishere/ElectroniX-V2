@@ -57,10 +57,6 @@ app.use("/provider", verifyProviderToken, provider);
 
 app.use("/update", verifyTokenUsers, updateProfile);
 
-app.use("/uploads/products", express.static("uploads/products"));
-
-app.use("/uploads/profilepic", express.static("uploads/profilepic"));
-
 app.use((req, res, next) => next(createHttpError(404, "Endpoint not found")));
 
 export default app;

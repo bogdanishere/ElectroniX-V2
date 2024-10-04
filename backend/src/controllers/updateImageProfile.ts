@@ -1,7 +1,6 @@
 import { RequestHandler } from "express";
 import sql from "../models/neon";
-import sharp from "sharp";
-import env from "../../env";
+import { put } from "@vercel/blob";
 
 export const updateProfile: RequestHandler = async (req, res, next) => {
   const { username } = req.query;
@@ -36,21 +35,21 @@ export const updateProfile: RequestHandler = async (req, res, next) => {
     const productId = generateCode();
 
     const updateProfilePic = "/uploads/profilepic/" + productId + ".png";
-    await sharp(image_profile?.buffer)
-      .resize(300, 300)
-      .png()
-      .toFile("./" + updateProfilePic);
+    const blob = await put(updateProfilePic, image_profile.buffer, {
+      contentType: "image/png",
+      access: "public",
+    });
 
     await sql`
       UPDATE users
-      SET image_profile = ${env.SERVER_URL + updateProfilePic}
+      SET image_profile = ${blob.url}
       WHERE username = ${username as string}
     `;
 
     res.status(200).json({
       message: "Profile updated",
       username,
-      image_profile: env.SERVER_URL + updateProfilePic,
+      image_profile: blob.url,
     });
   } catch (error) {
     next(error);

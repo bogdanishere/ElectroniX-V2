@@ -1,7 +1,6 @@
 import { RequestHandler } from "express";
 import sql from "../../models/neon";
-import sharp from "sharp";
-import env from "../../../env";
+import { put } from "@vercel/blob";
 
 export const addProduct: RequestHandler = async (req, res, next) => {
   function generateCode(): string {
@@ -50,21 +49,18 @@ export const addProduct: RequestHandler = async (req, res, next) => {
     });
   }
 
-  console.log(featuredImage);
-
   if (!featuredImage) {
     return res.status(400).json({
       message: "Please provide a featured image",
     });
   }
 
-  console.log("rulez");
-
   const featureImageUploadPath = "/uploads/products/" + productId + ".png";
-  await sharp(featuredImage?.buffer)
-    .resize(300, 300)
-    .png()
-    .toFile("./" + featureImageUploadPath);
+
+  const blob = await put(featureImageUploadPath, featuredImage.buffer, {
+    contentType: "image/png",
+    access: "public",
+  });
 
   try {
     await sql`
@@ -98,7 +94,7 @@ export const addProduct: RequestHandler = async (req, res, next) => {
         ${categories},
         ${new Date().toISOString()},
         ${new Date().toISOString()},
-        ${env.SERVER_URL + featureImageUploadPath},
+        ${blob.url},
         ${0},
         ${0},
         ${description}
