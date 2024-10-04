@@ -10,6 +10,8 @@ export const deleteProduct: RequestHandler = async (req, res, next) => {
       return;
     }
 
+    await sql`DELETE FROM orderdetails WHERE product_id = ${productId}`;
+
     const x =
       await sql`SELECT * from orderdetails where product_id = ${productId}`;
 

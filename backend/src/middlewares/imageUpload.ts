@@ -9,7 +9,8 @@ export const featureImageUpload = multer({
       file.mimetype === "image/png" ||
       file.mimetype === "image/jpg" ||
       file.mimetype === "image/jpeg" ||
-      file.mimetype === "jpg"
+      file.mimetype === "jpg" ||
+      file.size > 150000
     ) {
       callback(null, true);
     } else {
@@ -27,7 +28,8 @@ export const featureImageProfile = multer({
       file.mimetype === "image/png" ||
       file.mimetype === "image/jpg" ||
       file.mimetype === "image/jpeg" ||
-      file.mimetype === "jpg"
+      file.mimetype === "jpg" ||
+      file.size > 150000
     ) {
       callback(null, true);
     } else {
