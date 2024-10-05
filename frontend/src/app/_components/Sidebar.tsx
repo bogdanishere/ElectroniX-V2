@@ -92,7 +92,7 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="bg-slate-100 dark:bg-slate-500 px-2 sm:px-4 border-r border-gray-200 dark:border-500 row-span-full flex flex-col gap-4 sm:gap-6 md:gap-8 items-center py-5">
+    <div className="bg-slate-100 dark:bg-slate-500 px-2 sm:px-4 border-r border-gray-200 dark:border-500 row-span-full flex flex-col gap-4 sm:gap-6 md:gap-8 items-center py-5 w-full">
       <Filter />
 
       <SidebarSelectCurrency
