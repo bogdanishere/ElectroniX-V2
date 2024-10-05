@@ -1,35 +1,3 @@
-// class HttpError extends Error {
-//     constructor(message?: string) {
-//         super(message);
-//         this.name = this.constructor.name;
-//     }
-// }
-
-// /**
-//  * Status code: 400
-//  */
-// export class BadRequestError extends HttpError { }
-
-// /**
-//  * Status code: 401
-//  */
-// export class UnauthorizedError extends HttpError { }
-
-// /**
-//  * Status code: 404
-//  */
-// export class NotFoundError extends HttpError { }
-
-// /**
-//  * Status code: 409
-//  */
-// export class ConflictError extends HttpError { }
-
-// /**
-//  * Status code: 429
-//  */
-// export class TooManyRequestsError extends HttpError { }
-
 class HttpError extends Error {
   public statusCode: number;
 
@@ -45,7 +13,7 @@ class HttpError extends Error {
  * Status code: 400
  */
 export class BadRequestError extends HttpError {
-  constructor(message: string = "Bad Request") {
+  constructor(message: string = "Bad Request. The request is invalid") {
     super(message, 400);
   }
 }
@@ -54,7 +22,9 @@ export class BadRequestError extends HttpError {
  * Status code: 401
  */
 export class UnauthorizedError extends HttpError {
-  constructor(message: string = "Unauthorized") {
+  constructor(
+    message: string = "Unauthorized. You are not authorized to access this resource"
+  ) {
     super(message, 401);
   }
 }
@@ -63,7 +33,9 @@ export class UnauthorizedError extends HttpError {
  * Status code: 404
  */
 export class NotFoundError extends HttpError {
-  constructor(message: string = "Not Found") {
+  constructor(
+    message: string = "Not Found. The resource you are looking for does not exist"
+  ) {
     super(message, 404);
   }
 }
@@ -72,7 +44,9 @@ export class NotFoundError extends HttpError {
  * Status code: 409
  */
 export class ConflictError extends HttpError {
-  constructor(message: string = "Conflict") {
+  constructor(
+    message: string = "Conflict. Probably you are trying to create a resource that already exists"
+  ) {
     super(message, 409);
   }
 }
