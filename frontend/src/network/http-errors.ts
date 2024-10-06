@@ -13,7 +13,7 @@ class HttpError extends Error {
  * Status code: 400
  */
 export class BadRequestError extends HttpError {
-  constructor(message: string = "Bad Request. The request is invalid") {
+  constructor(message: string = "400") {
     super(message, 400);
   }
 }
@@ -22,9 +22,7 @@ export class BadRequestError extends HttpError {
  * Status code: 401
  */
 export class UnauthorizedError extends HttpError {
-  constructor(
-    message: string = "Unauthorized. You are not authorized to access this resource"
-  ) {
+  constructor(message: string = "401") {
     super(message, 401);
   }
 }
@@ -33,9 +31,7 @@ export class UnauthorizedError extends HttpError {
  * Status code: 404
  */
 export class NotFoundError extends HttpError {
-  constructor(
-    message: string = "Not Found. The resource you are looking for does not exist"
-  ) {
+  constructor(message: string = "404") {
     super(message, 404);
   }
 }
@@ -44,9 +40,7 @@ export class NotFoundError extends HttpError {
  * Status code: 409
  */
 export class ConflictError extends HttpError {
-  constructor(
-    message: string = "Conflict. Probably you are trying to create a resource that already exists"
-  ) {
+  constructor(message: string = "409") {
     super(message, 409);
   }
 }
@@ -55,7 +49,7 @@ export class ConflictError extends HttpError {
  * Status code: 429
  */
 export class TooManyRequestsError extends HttpError {
-  constructor(message: string = "Too Many Requests") {
+  constructor(message: string = "429") {
     super(message, 429);
   }
 }
@@ -65,7 +59,7 @@ export class TooManyRequestsError extends HttpError {
  */
 
 export class InternalServerError extends HttpError {
-  constructor(message: string = "Internal Server Error") {
+  constructor(message: string = "500") {
     super(message, 500);
   }
 }

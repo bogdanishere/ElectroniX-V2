@@ -2,30 +2,26 @@
 
 import Button from "@/utils/Button";
 import { confirmProviderOrder, deleteProviderOrder } from "../_lib/actions";
-import { useRouter } from "next/navigation";
 
 export default function AcceptRejectCommandsByProvider({
   orderId,
   page,
+  optimisticAcceptedOrderOperation,
 }: {
   orderId: number;
   page: number | string;
+  optimisticAcceptedOrderOperation: (orderId: number) => void;
 }) {
-  const router = useRouter();
   async function hanleAccept(orderId: number, page: number | string) {
-    try {
-      await confirmProviderOrder(orderId, page);
-    } catch (error) {
-      router.push("/errorpage?error=InvalidData");
-    }
+    optimisticAcceptedOrderOperation(orderId);
+    await confirmProviderOrder(orderId, page);
   }
+
   async function hanleReject(orderId: number, page: number | string) {
-    try {
-      await deleteProviderOrder(orderId, page);
-    } catch (error) {
-      router.push("/error?error=This product has an order");
-    }
+    optimisticAcceptedOrderOperation(orderId);
+    await deleteProviderOrder(orderId, page);
   }
+
   return (
     <div className="flex gap-2">
       <Button onClick={() => hanleAccept(orderId, page)}>Accept</Button>
