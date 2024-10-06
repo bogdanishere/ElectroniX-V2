@@ -4,12 +4,17 @@ import Spinner from "@/utils/Spinner";
 import * as api from "@/network/api/products";
 import { Suspense } from "react";
 import { restrictionAdmins } from "@/helpers/restrictionAdmins";
+import { notFound } from "next/navigation";
 
 interface SearchParamsProp {
   sort: "asc" | "desc" | "none";
 }
 
-// generateStaticParams() // This function is used to generate static paths for the page
+// export async function generateStaticParams() {
+//   return [{ page: "1" }, { page: "2" }, { page: "3" }];
+// }
+
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
@@ -30,6 +35,13 @@ export default async function Client({
   searchParams: SearchParamsProp;
 }) {
   await restrictionAdmins();
+
+  const pageNumber = parseInt(params.page, 10);
+
+  if (isNaN(pageNumber) || pageNumber < 1) {
+    notFound();
+  }
+
   const products = await api.getProducts({
     page: parseInt(params.page),
     sort: searchParams.sort,

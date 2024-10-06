@@ -1,13 +1,14 @@
 import { verifyRestriction } from "@/helpers/verifyRestriction";
 
-import { formatDate } from "@/utils/formatDate";
-import AcceptRejectCommandsByProvider from "@/app/_components/AcceptRejectCommandsByProvider";
 import FormProviderAddProduct from "@/app/_components/FormProviderAddProduct";
 import { getProviderProducts, showOrdersProvider } from "@/app/_lib/actions";
 
 import { Pagination } from "@/app/_components/Pagination";
 
-import ProductCardProvider from "@/app/_components/ProductCardProvider";
+import OrderProviderList from "@/app/_components/OrderProviderList";
+import ProductListProvider from "@/app/_components/ProductListProvider";
+
+export const dynamicParams = true;
 
 interface OrdersProps {
   orders: OrdersProp[];
@@ -61,48 +62,7 @@ export default async function Page({ params }: { params: { page: string } }) {
 
   return (
     <div className="p-9">
-      <div className="grid grid-cols-7 font-bold bg-gray-200 p-5">
-        <div className="flex justify-center">Order ID</div>
-        <div className="flex justify-center">Product ID</div>
-        <div className="flex justify-center">Quantity</div>
-        <div className="flex justify-center">Product Name</div>
-        <div className="flex justify-center">Date Created</div>
-        <div className="flex justify-center">Employee Approved</div>
-        <div className="flex justify-center">Actions</div>
-      </div>
-      {orders.orders.length > 0 ? (
-        orders.orders.map((order) => (
-          <div
-            key={order.order_detail_id}
-            className="grid grid-cols-7 p-5 border-b"
-          >
-            <div className="flex justify-center">{order.order_detail_id}</div>
-            <div className="flex justify-center">{order.product_id}</div>
-            <div className="flex justify-center">{order.quantity}</div>
-            <div className="relative flex justify-center group">
-              <span className="group-hover:block hidden absolute bottom-full mb-2 p-2 bg-gray-800 text-white text-sm rounded">
-                {order.product_name}
-              </span>
-              {order.product_name.slice(0, 10)}...
-            </div>
-
-            <div className="flex justify-center">
-              {formatDate(order.date_created)}
-            </div>
-            <div className="flex justify-center">
-              {order.employee_approved ? "yes" : " no"}
-            </div>
-            <AcceptRejectCommandsByProvider
-              orderId={order.order_detail_id}
-              page={params.page}
-            />
-          </div>
-        ))
-      ) : (
-        <div className="flex justify-center items-center text-2xl font-bold pt-5">
-          You are up to date with the orders
-        </div>
-      )}
+      <OrderProviderList orders={orders} params={params} />
       <div className="flex justify-center items-center text-2xl font-bold pt-5">
         Add your products to us
       </div>
@@ -110,15 +70,7 @@ export default async function Page({ params }: { params: { page: string } }) {
       <div className="flex justify-center items-center text-2xl font-bold pt-5 pb-5">
         Your products are there
       </div>
-      <div className="max-w-screen-xl mx-auto grid grid-rows-auto grid-cols-4 gap-5 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 pt-5">
-        {products.products.map((product) => (
-          <ProductCardProvider
-            key={product.product_id}
-            dataProduct={product}
-            page={params.page}
-          />
-        ))}
-      </div>
+      <ProductListProvider products={products} params={params} />
 
       <Pagination page={parseInt(params.page)} />
     </div>

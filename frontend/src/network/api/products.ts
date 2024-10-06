@@ -9,10 +9,11 @@ interface GetProductsProps {
 export async function getProducts({ page, sort, limit }: GetProductsProps) {
   if (sort === undefined || sort === null) {
     sort = "none";
+    limit = 5;
   }
 
   const response = await api.get(
-    `/products/products?page=${page}&sort=${sort}&limit=${limit}`
+    `/products/products?page=${+page}&sort=${sort}&limit=${limit}`
   );
   return response.data;
 }

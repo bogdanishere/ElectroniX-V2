@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import StarRating from "@/utils/StarRating";
 import { convertAmount, formatCurrency } from "@/helpers/formatCurrency";
 import { useActualCurrency } from "@/hooks/useActualCurrency";
@@ -33,9 +33,15 @@ interface ProductProps {
 
 export default function ProductCardProvider({
   dataProduct,
+  optimisticDeleteProductOperation,
   page,
 }: {
   dataProduct: ProductProps;
+  optimisticDeleteProductOperation: (action: {
+    type: string;
+    product?: ProductProps;
+    productId?: string;
+  }) => void;
   page: number | string;
 }) {
   const {
@@ -55,7 +61,23 @@ export default function ProductCardProvider({
   const [imageSrc, setImageSrc] = useState(images);
 
   async function handleDeleteProduct(product_id: string) {
-    await deleteProviderProduct(product_id, page);
+    startTransition(() => {
+      optimisticDeleteProductOperation({
+        type: "delete",
+        productId: product_id,
+      });
+    });
+
+    try {
+      await deleteProviderProduct(product_id, page);
+    } catch (error) {
+      startTransition(() => {
+        optimisticDeleteProductOperation({
+          type: "revertDelete",
+          product: dataProduct,
+        });
+      });
+    }
   }
 
   function handleImageError() {
@@ -67,8 +89,6 @@ export default function ProductCardProvider({
       setCurrencyPrice(data.toString());
     });
   }, [currency, currencySelectedByUser, price]);
-
-  // imageSrc[0].length === 1 ? imageSrc : imageSrc[0]
 
   return (
     <div className="flex flex-col gap-2">

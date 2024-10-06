@@ -35,6 +35,8 @@ export default async function Page() {
 
   const orders = (await getOrders()) as OrdersProps;
 
+  console.log("orders", orders);
+
   return (
     <div className="flex flex-col justify-center">
       <div className="flex flex-col gap-10 justify-center items-center pt-5">
