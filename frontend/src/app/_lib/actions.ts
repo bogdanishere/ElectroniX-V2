@@ -56,7 +56,7 @@ export async function loginEmail(data: FormData) {
     return redirect("/electronix/1");
   } catch (error) {
     if (error instanceof NotFoundError) {
-      return redirect(`/login?error=${"Invalid credentials"}`);
+      return redirect(`/login?error=${"Invalid email or password"}`);
     }
   }
 }
@@ -95,9 +95,11 @@ export async function register(data: FormData) {
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
     });
 
-    redirect("/electronix/1");
+    return redirect("/electronix/1");
   } catch (error) {
-    return redirect(`/register?error=${"Username already exists"}`);
+    return redirect(
+      `/register?error=${"Username already exists. Please use another one."}`
+    );
   }
 }
 
@@ -109,7 +111,7 @@ export async function addAddress(data: FormData) {
   const state = data.get("state") as string;
 
   if (!street || !city || !country || !postal_code || !state) {
-    return redirect(`/errorpage?error=${"InvalidData"}`);
+    return redirect(`/address?error=${"Missing fields"}`);
   }
 
   const { token, username } = await getTokenUsernameProfilePic();
@@ -129,7 +131,9 @@ export async function addAddress(data: FormData) {
   });
 
   if (!res) {
-    return redirect(`/errorpage?error=${"InvalidData"}`);
+    return redirect(
+      `/errorpage?error=${"Something went wrong. Please retry again later."}`
+    );
   }
 
   redirect("/commands");
