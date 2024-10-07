@@ -12,7 +12,6 @@ export const addCommand: RequestHandler = async (req, res, next) => {
   }
 
   try {
-    // Retrieve the address_id for the given clientUsername
     const addressResult = await sql`
       SELECT address_id 
       FROM address 
@@ -27,7 +26,6 @@ export const addCommand: RequestHandler = async (req, res, next) => {
 
     const addressId = addressResult[0].address_id;
 
-    // Insert into order_table and capture the returned order_id
     const insertOrderResult = await sql`
       INSERT INTO order_table (
         address_id, 
@@ -50,7 +48,6 @@ export const addCommand: RequestHandler = async (req, res, next) => {
 
     const orderId = insertOrderResult[0].order_id;
 
-    // Insert each product into orderdetails with the correct status
     for (const product of products) {
       const { productId, providerUsername, quantity } = product;
 
