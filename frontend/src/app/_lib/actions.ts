@@ -20,7 +20,7 @@ import * as update from "@/network/api/updateProfile";
 
 import { revalidatePath } from "next/cache";
 import { getTokenUsernameProfilePic } from "@/helpers/getUserDetails";
-import { ConflictError, NotFoundError } from "@/network/http-errors";
+import { NotFoundError } from "@/network/http-errors";
 
 export async function loginGoogle() {
   await signIn("google", {
@@ -97,9 +97,7 @@ export async function register(data: FormData) {
 
     redirect("/electronix/1");
   } catch (error) {
-    if (error instanceof ConflictError) {
-      return redirect(`/register?error=${"Username already exists"}`);
-    }
+    return redirect(`/register?error=${"Username already exists"}`);
   }
 }
 
@@ -310,24 +308,20 @@ export async function addProvider(data: FormData) {
     !providerPassword ||
     !confirmPassword
   ) {
-    return redirect(`/errorpage?error=${"Add all fields"}`);
+    return { success: false, error: "Add all fields" };
   }
 
   if (providerPassword !== confirmPassword) {
-    return redirect(`/errorpage?error=${"Passwords do not match"}`);
+    return { success: false, error: "Passwords do not match" };
   }
 
-  const res = await employeeRequests.addProvider(
+  return await employeeRequests.addProvider(
     providerName,
     providerEmail,
     providerPassword,
     employeeUsername,
     token
   );
-
-  revalidatePath("/employee");
-
-  return res;
 }
 
 export async function addProviderProduct(formData: FormData) {

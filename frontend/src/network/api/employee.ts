@@ -1,4 +1,5 @@
 import api from "../axiosInstance";
+import axios from "axios";
 
 export async function getOrders({
   employee,
@@ -83,18 +84,32 @@ export async function addProvider(
   employeeUsername: string,
   token: string
 ) {
-  const response = await api.post(
-    `/employee/addprovider?username=${employeeUsername}`,
-    {
-      name: providerName,
-      email: providerEmail,
-      password: providerPassword,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
+  try {
+    const response = await api.post(
+      `/employee/addprovider?username=${employeeUsername}`,
+      {
+        name: providerName,
+        email: providerEmail,
+        password: providerPassword,
       },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return { success: true, response: response.data };
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 409) {
+      return {
+        success: false,
+        error: "A provider with this username already exists.",
+      };
     }
-  );
-  return response.data;
+
+    return {
+      success: false,
+      error: "Something went wrong. Please retry again later.",
+    };
+  }
 }
