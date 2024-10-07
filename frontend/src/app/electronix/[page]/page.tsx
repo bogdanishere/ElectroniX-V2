@@ -45,7 +45,6 @@ export default async function Client({
   const products = await api.getProducts({
     page: parseInt(params.page),
     sort: searchParams.sort,
-    limit: 5,
   });
 
   return (
