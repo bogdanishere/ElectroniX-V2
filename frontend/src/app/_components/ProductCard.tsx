@@ -101,7 +101,7 @@ export default function ProductCard({
           />
         </div>
         <div className="relative flex justify-center group px-2">
-          <span className="group-hover:block hidden absolute bottom-full mb-2 p-2 bg-gray-800 text-white text-xs sm:text-sm rounded z-10 max-w-[90%] truncate">
+          <span className="group-hover:block hidden absolute bottom-full mb-2 p-2 bg-gray-800 text-white text-xs sm:text-sm rounded z-10 max-w-[90%]">
             {name}
           </span>
           <p className="text-sm sm:text-base truncate">{name}</p>
