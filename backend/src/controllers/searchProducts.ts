@@ -17,15 +17,34 @@ export const searchProducts: RequestHandler = async (req, res, next) => {
   const offset = productsPerPage * (Number(page) - 1);
 
   try {
-    const products = await sql`
-      SELECT * FROM product
-      WHERE
+    let products;
+    if (sort === "none") {
+      products = await sql`
+        SELECT * FROM product WHERE
         lower(name) LIKE ${"%" + productName.toLowerCase() + "%"}
         OR lower(brand) LIKE ${"%" + productName.toLowerCase() + "%"}
         OR lower(categories) LIKE ${"%" + productName.toLowerCase() + "%"}
-      ${sort !== "none" ? sql`ORDER BY price ${sql(sort)}` : sql``}
-      LIMIT ${productsPerPage} OFFSET ${offset}
-    `;
+        LIMIT ${productsPerPage} OFFSET ${offset}
+      `;
+    } else if (sort === "asc") {
+      products = await sql`
+        SELECT * FROM product WHERE
+        lower(name) LIKE ${"%" + productName.toLowerCase() + "%"}
+        OR lower(brand) LIKE ${"%" + productName.toLowerCase() + "%"}
+        OR lower(categories) LIKE ${"%" + productName.toLowerCase() + "%"}
+        ORDER BY price asc
+        LIMIT ${productsPerPage} OFFSET ${offset}
+      `;
+    } else {
+      products = await sql`
+        SELECT * FROM product WHERE
+        lower(name) LIKE ${"%" + productName.toLowerCase() + "%"}
+        OR lower(brand) LIKE ${"%" + productName.toLowerCase() + "%"}
+        OR lower(categories) LIKE ${"%" + productName.toLowerCase() + "%"}
+        ORDER BY price desc
+        LIMIT ${productsPerPage} OFFSET ${offset}
+      `;
+    }
 
     return res.json({
       products: products,
