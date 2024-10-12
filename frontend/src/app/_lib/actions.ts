@@ -20,7 +20,7 @@ import * as update from "@/network/api/updateProfile";
 
 import { revalidatePath } from "next/cache";
 import { getTokenUsernameProfilePic } from "@/helpers/getUserDetails";
-import { NotFoundError } from "@/network/http-errors";
+import { ConflictError, NotFoundError } from "@/network/http-errors";
 
 export async function loginGoogle() {
   await signIn("google", {
@@ -97,8 +97,13 @@ export async function register(data: FormData) {
 
     return redirect("/electronix/1");
   } catch (error) {
+    if (error instanceof ConflictError) {
+      return redirect(
+        `/register?error=${"Username already exists. Please use another one."}`
+      );
+    }
     return redirect(
-      `/register?error=${"Username already exists. Please use another one."}`
+      `/errorpage?error=${"Something went wrong. Please retry again later."}`
     );
   }
 }

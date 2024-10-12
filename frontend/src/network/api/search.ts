@@ -8,8 +8,8 @@ export async function searchProducts(
   if (sort === undefined || sort === null) {
     sort = "none";
   }
-  const response = await api.get(`search/search/${page}/${productName}`, {
-    params: { sort },
-  });
+  const response = await api.get(
+    `search/search/${page}/${productName}?sort=${sort}`
+  );
   return response.data;
 }
