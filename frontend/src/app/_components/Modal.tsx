@@ -170,7 +170,9 @@ function Products() {
   };
 
   if (products.length === 0)
-    return <span className="text-gray-500">Nu ati selectat niciun produs</span>;
+    return (
+      <span className="text-gray-500">You didn&apos;t add any products</span>
+    );
 
   const handleNavigateToProduct = (id: string) => {
     close();
@@ -232,7 +234,7 @@ function Wishies() {
     router.push(`/product/${id}`);
   };
 
-  if (wishies.length === 0) return <div>Nu ati selectat niciun produs</div>;
+  if (wishies.length === 0) return <div>You didn&apos;t add any products</div>;
   return (
     <>
       <h1 className="text-xl font-bold">Produsele favorite</h1>
