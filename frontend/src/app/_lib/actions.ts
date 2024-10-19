@@ -20,7 +20,11 @@ import * as update from "@/network/api/updateProfile";
 
 import { revalidatePath } from "next/cache";
 import { getTokenUsernameProfilePic } from "@/helpers/getUserDetails";
-import { ConflictError, NotFoundError } from "@/network/http-errors";
+import {
+  ConflictError,
+  ForbiddenError,
+  NotFoundError,
+} from "@/network/http-errors";
 
 export async function loginGoogle() {
   await signIn("google", {
@@ -266,10 +270,19 @@ export async function postReview({
   }
 }
 
-export async function getOrdersEmployee(employee: string, token: string) {
-  const res = await employeeRequests.getOrders({ employee, token });
+export async function getOrdersEmployee() {
+  const { token, username: employee } = await getTokenUsernameProfilePic();
 
-  return res;
+  try {
+    const res = await employeeRequests.getOrders({ employee, token });
+
+    return res;
+  } catch (error) {
+    if (error instanceof ForbiddenError) {
+      return redirect(`/errorpage?error=${"You need to reconnect to the app"}`);
+    }
+    throw error;
+  }
 }
 
 export async function getBrandCount(numberOfBrands: number) {
@@ -368,15 +381,22 @@ export async function addProviderProduct(formData: FormData) {
 }
 
 export async function showOrdersProvider() {
-  const { username, token } = await getTokenUsernameProfilePic();
+  try {
+    const { username, token } = await getTokenUsernameProfilePic();
 
-  if (!username || !token) {
-    return redirect("/login");
+    if (!username || !token) {
+      return redirect("/login");
+    }
+
+    const res = await providerRequests.getProviderOrders(username, token);
+
+    return res;
+  } catch (error) {
+    if (error instanceof ForbiddenError) {
+      return redirect(`/errorpage?error=${"You need to reconnect to the app"}`);
+    }
+    throw error;
   }
-
-  const res = await providerRequests.getProviderOrders(username, token);
-
-  return res;
 }
 
 export async function confirmProviderOrder(
@@ -425,15 +445,26 @@ export async function deleteProviderOrder(
 }
 
 export async function getProviderProducts(page: number) {
-  const { username, token } = await getTokenUsernameProfilePic();
+  try {
+    const { username, token } = await getTokenUsernameProfilePic();
 
-  if (!username || !token) {
-    return redirect("/login");
+    if (!username || !token) {
+      return redirect("/login");
+    }
+
+    const res = await providerRequests.getProviderProducts(
+      username,
+      token,
+      page
+    );
+
+    return res;
+  } catch (error) {
+    if (error instanceof ForbiddenError) {
+      return redirect(`/errorpage?error=${"You need to reconnect to the app"}`);
+    }
+    throw error;
   }
-
-  const res = await providerRequests.getProviderProducts(username, token, page);
-
-  return res;
 }
 
 export async function deleteProviderProduct(

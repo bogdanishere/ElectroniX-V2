@@ -1,65 +1,44 @@
 class HttpError extends Error {
-  public statusCode: number;
-
-  constructor(message: string, statusCode: number) {
+  constructor(message?: string) {
     super(message);
     this.name = this.constructor.name;
-    this.statusCode = statusCode;
-    Error.captureStackTrace(this, this.constructor);
   }
 }
 
 /**
  * Status code: 400
  */
-export class BadRequestError extends HttpError {
-  constructor(message: string = "400") {
-    super(message, 400);
-  }
-}
+export class BadRequestError extends HttpError {}
 
 /**
  * Status code: 401
  */
-export class UnauthorizedError extends HttpError {
-  constructor(message: string = "401") {
-    super(message, 401);
-  }
-}
+export class UnauthorizedError extends HttpError {}
+
+/**
+ * Status code: 403
+ */
+
+export class ForbiddenError extends HttpError {}
 
 /**
  * Status code: 404
  */
-export class NotFoundError extends HttpError {
-  constructor(message: string = "404") {
-    super(message, 404);
-  }
-}
+
+export class NotFoundError extends HttpError {}
 
 /**
  * Status code: 409
  */
-export class ConflictError extends HttpError {
-  constructor(message: string = "409") {
-    super(message, 409);
-  }
-}
+export class ConflictError extends HttpError {}
 
 /**
  * Status code: 429
  */
-export class TooManyRequestsError extends HttpError {
-  constructor(message: string = "429") {
-    super(message, 429);
-  }
-}
+export class TooManyRequestsError extends HttpError {}
 
 /**
  * Status code: 500
  */
 
-export class InternalServerError extends HttpError {
-  constructor(message: string = "500") {
-    super(message, 500);
-  }
-}
+export class InternalServerError extends HttpError {}

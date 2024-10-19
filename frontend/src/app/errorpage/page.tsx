@@ -1,6 +1,6 @@
 import ErrorPage from "../_components/ErrorPage";
 
-export default function Page({
+export default async function Page({
   searchParams,
 }: {
   searchParams: { error: string };
