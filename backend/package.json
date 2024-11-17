@@ -10,7 +10,7 @@
     "postinstall": "prisma generate",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build"
+    "vercel-build": "prisma generate && prisma migrate deploy && nodemon src/server.ts"
   },
   "keywords": [],
   "author": "",
