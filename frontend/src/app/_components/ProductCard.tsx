@@ -11,26 +11,23 @@ import { handleAddToCart } from "@/helpers/addToCard";
 import { handleAddToWishlist } from "@/helpers/addToWishlist";
 
 interface ProductProps {
-  product_id: string;
-  price: string;
+  productId: string;
+  price: number;
   currency: string;
   weight: string;
   name: string;
   brand: string;
   quantity: number;
-  prices_availability: string;
-  prices_condition: string;
-  prices_merchant: string;
-  prices_sourceURLs: string;
+  pricesAvailability: string;
+  pricesMerchant: string;
   categories: string;
   dateAdded: string;
   dateUpdated: string;
-  imageurls: string[];
-  sourceURLs: string;
-  rating: string;
-  nr_rating: number;
+  imageUrls: string;
+  rating: number;
+  nrOfRatings: number;
   description: string;
-  quality: string;
+  quality: number;
 }
 
 export default function ProductCard({
@@ -39,12 +36,12 @@ export default function ProductCard({
   dataProduct: ProductProps;
 }) {
   const {
-    product_id,
-    imageurls: images,
+    productId,
+    imageUrls: images,
     name,
     rating,
-    nr_rating: numberOfRatings,
-    prices_merchant: provider,
+    nrOfRatings,
+    pricesMerchant: provider,
     price,
     currency,
   } = dataProduct;
@@ -53,16 +50,7 @@ export default function ProductCard({
 
   const [currencyPrice, setCurrencyPrice] = useState(price);
 
-  const [imageSrc, setImageSrc] = useState(() => {
-    if (typeof images === "string") {
-      // @ts-expect-error - images is a string
-      return images.split(",").map((url) => url.trim());
-    } else if (Array.isArray(images)) {
-      return images;
-    } else {
-      return [];
-    }
-  });
+  const [imageSrc, setImageSrc] = useState(images);
 
   function handleImageError() {
     setImageSrc("https://via.placeholder.com/300");
@@ -78,7 +66,7 @@ export default function ProductCard({
     <div className="flex flex-col gap-2 w-full">
       <div className="w-full max-w-xs mx-auto border border-gray-300 rounded-lg overflow-hidden font-sans shadow-md hover:shadow-lg transition-shadow duration-300">
         <div className="text-center bg-white">
-          <Link href={`/product/${product_id}`}>
+          <Link href={`/product/${productId}`}>
             <Image
               src={imageSrc[0].length === 1 ? imageSrc : imageSrc[0]}
               alt={name}
@@ -96,7 +84,7 @@ export default function ProductCard({
           <FaHeart
             className="text-xl sm:text-2xl cursor-pointer text-gray-400 hover:text-red-500 transition-colors duration-300"
             onClick={() =>
-              handleAddToWishlist(product_id, name, provider, price)
+              handleAddToWishlist(productId, name, provider, price.toString())
             }
           />
         </div>
@@ -118,7 +106,7 @@ export default function ProductCard({
             />
           </span>
           <span className="text-gray-600 text-xs sm:text-sm">
-            {rating} ({numberOfRatings})
+            {rating} ({nrOfRatings})
           </span>
         </div>
         <div className="flex items-center justify-center mb-2">
@@ -129,7 +117,9 @@ export default function ProductCard({
         <div className="p-2 bg-gray-100 text-center">
           <button
             className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-sm sm:text-base"
-            onClick={() => handleAddToCart(product_id, name, provider, price)}
+            onClick={() =>
+              handleAddToCart(productId, name, provider, price.toString())
+            }
           >
             Add to cart
           </button>

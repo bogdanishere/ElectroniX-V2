@@ -2,7 +2,7 @@ export function handleAddToWishlist(
   id: string,
   name: string,
   provider: string,
-  price: string
+  price: string | number
 ) {
   const newProduct = { id, name, provider, price, quantity: 1 };
 

@@ -1,18 +1,21 @@
 import { RequestHandler } from "express";
-import sql from "../models/neon";
+import { prisma } from "../models/neon";
 
 export const getProductDetails: RequestHandler = async (req, res, next) => {
   try {
     const { productId } = req.params as { productId: string };
 
-    const product = await sql`
-      SELECT * FROM product WHERE product_id = ${productId}`;
+    const product = await prisma.products.findUnique({
+      where: {
+        productId: productId,
+      },
+    });
 
-    if (product.length === 0) {
+    if (!product) {
       return res.status(404).json({ status: "Product not found" });
     }
 
-    res.status(200).json({ product: product[0], status: "success" });
+    res.status(200).json({ product, status: "success" });
   } catch (error) {
     next(error);
   }

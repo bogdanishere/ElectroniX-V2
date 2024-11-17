@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
-import sql from "../models/neon";
+
+import { prisma } from "../models/neon";
 
 export const getProducts: RequestHandler = async (req, res, next) => {
   try {
@@ -16,29 +17,14 @@ export const getProducts: RequestHandler = async (req, res, next) => {
 
     const sortOrder = (req.query.sort as string)?.toLowerCase();
     const offset = (pageNumber - 1) * itemsPerPage;
-    let query;
 
-    // BLAME JAVASCRIPT FOR NOT WORKING AS EXPECTED
-    if (sortOrder.toLowerCase() === "asc") {
-      query = sql`
-        SELECT * FROM product
-        ORDER BY price ASC
-        LIMIT ${itemsPerPage} OFFSET ${offset}
-      `;
-    } else if (sortOrder.toLowerCase() === "desc") {
-      query = sql`
-      SELECT * FROM product
-      ORDER BY price DESC
-      LIMIT ${itemsPerPage} OFFSET ${offset}
-    `;
-    } else {
-      query = sql`
-      SELECT * FROM product
-      LIMIT ${itemsPerPage} OFFSET ${offset}
-    `;
-    }
-
-    const products = await query;
+    const products = await prisma.products.findMany({
+      take: itemsPerPage,
+      skip: offset,
+      orderBy: {
+        price: sortOrder === "asc" ? "asc" : "desc",
+      },
+    });
 
     res.status(200).json({
       products,

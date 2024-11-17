@@ -5,11 +5,11 @@ export const restrictionAdmins = async () => {
   const cookiesLogin = cookies().get("login")?.value;
   const type = cookiesLogin ? JSON.parse(cookiesLogin).type : null;
 
-  if (type === "employee") {
+  if (type === "EMPLOYEE") {
     return redirect("/employee");
   }
 
-  if (type === "provider") {
+  if (type === "PROVIDER") {
     return redirect("/provider/1");
   }
 

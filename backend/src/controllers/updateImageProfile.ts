@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import sql from "../models/neon";
+import { prisma } from "../models/neon";
 import { put } from "@vercel/blob";
 
 export const updateProfile: RequestHandler = async (req, res, next) => {
@@ -40,11 +40,14 @@ export const updateProfile: RequestHandler = async (req, res, next) => {
       access: "public",
     });
 
-    await sql`
-      UPDATE users
-      SET image_profile = ${blob.url}
-      WHERE username = ${username as string}
-    `;
+    await prisma.users.update({
+      where: {
+        username: username as string,
+      },
+      data: {
+        imageProfile: blob.url,
+      },
+    });
 
     res.status(200).json({
       message: "Profile updated",

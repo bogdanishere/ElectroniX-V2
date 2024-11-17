@@ -9,11 +9,11 @@ export default async function ProductPage({
 }) {
   const product = await api.getProductByID(id);
 
-  const { product_id } = product.product;
+  const { productId } = product.product;
 
   return (
     <SingleProductDescription dataProduct={product}>
-      <ReviewSection productID={product_id} />
+      <ReviewSection productID={productId} />
     </SingleProductDescription>
   );
 }

@@ -1,12 +1,15 @@
 import { RequestHandler } from "express";
-import sql from "../models/neon";
+import { prisma } from "../models/neon";
 
 export const checkAddress: RequestHandler = async (req, res, next) => {
   const { username } = req.body;
 
   try {
-    const address =
-      await sql`SELECT * FROM address WHERE client_username = ${username}`;
+    const address = await prisma.address.findMany({
+      where: {
+        clientUsername: username,
+      },
+    });
 
     if (address.length === 0) {
       return res
@@ -21,19 +24,29 @@ export const checkAddress: RequestHandler = async (req, res, next) => {
 };
 
 export const addAddress: RequestHandler = async (req, res, next) => {
-  const { username, street, city, country, postal_code, state } = req.body;
+  const { username, street, city, country, postal_code } = req.body;
 
   try {
-    const existingAddress =
-      await sql`SELECT * FROM address WHERE client_username = ${username}`;
+    const existingAddress = await prisma.address.findMany({
+      where: {
+        clientUsername: username,
+      },
+    });
 
     if (existingAddress.length > 0) {
       return res.status(400).json({ message: "User already has an address" });
     }
 
-    await sql`INSERT INTO address (client_username, street, city, state,
-     country, postal_code, address_type) VALUES (${username},
-      ${street}, ${city}, ${state}, ${country}, ${postal_code}, 'billing')`;
+    await prisma.address.create({
+      data: {
+        clientUsername: username,
+        street,
+        city,
+        country,
+        postalCode: postal_code,
+        addressType: "BILLING",
+      },
+    });
 
     return res.status(201).json({ message: "Address added successfully" });
   } catch (error) {

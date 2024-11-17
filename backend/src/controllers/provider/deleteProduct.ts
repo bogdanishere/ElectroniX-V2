@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import sql from "../../models/neon";
+import { prisma } from "../../models/neon";
 
 export const deleteProduct: RequestHandler = async (req, res, next) => {
   const { productId } = req.params;
@@ -10,24 +10,32 @@ export const deleteProduct: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    await sql`DELETE FROM orderdetails WHERE product_id = ${productId}`;
-
-    const x =
-      await sql`SELECT * from orderdetails where product_id = ${productId}`;
-
-    if (x.length > 0) {
+    try {
+      await prisma.ordersProvider.deleteMany({
+        where: {
+          productId: productId,
+        },
+      });
+    } catch (error) {
+      console.log("No order found", error);
       res
         .status(400)
         .json({ message: "Product has a command, you cannot delete it" });
       return;
     }
 
-    await sql`DELETE FROM new_rating WHERE product_id = ${productId}`;
+    await prisma.ratingClient.deleteMany({
+      where: {
+        productId: productId,
+      },
+    });
 
-    await sql`
-      DELETE FROM product WHERE product_id = ${String(
-        productId
-      )} AND prices_merchant = ${providerUsername as string}`;
+    await prisma.products.delete({
+      where: {
+        productId: productId,
+        pricesMerchant: providerUsername as string,
+      },
+    });
 
     res.status(200).json({ message: "Product deleted", productId });
   } catch (error) {

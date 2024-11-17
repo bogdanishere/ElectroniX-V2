@@ -2,7 +2,7 @@ export function handleAddToCart(
   id: string,
   name: string,
   provider: string,
-  price: string
+  price: string | number
 ) {
   const newProduct = {
     id,

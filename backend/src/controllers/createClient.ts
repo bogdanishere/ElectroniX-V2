@@ -2,7 +2,8 @@ import { RequestHandler } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import env from "../../env";
-import sql from "../models/neon";
+
+import { prisma } from "../models/neon";
 
 interface UserData {
   username: string;
@@ -19,22 +20,51 @@ export const createNewClient: RequestHandler = async (req, res, next) => {
     req.body as UserData;
 
   try {
-    const users = await sql`SELECT * FROM users WHERE username = ${username}`;
+    if (!username || !password || !email || !firstName || !lastName) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
 
-    if (users.length > 0) {
+    const findUser = await prisma.users.findFirst({
+      where: {
+        OR: [{ username }, { email }],
+      },
+    });
+
+    if (findUser) {
       return res.status(409).json({ message: "Client already exists!" });
     }
 
     const hashedPassword = bcrypt.hashSync(password, 8);
 
-    await sql`INSERT INTO users (username, password, email, type) VALUES (${username}, ${hashedPassword}, ${email}, ${"client"})`;
+    const newUser = await prisma.users.create({
+      data: {
+        username,
+        password: hashedPassword,
+        email,
+        type: "CLIENT",
+        imageProfile: "",
+        client: {
+          create: {
+            username,
+            firstName,
+            lastName,
+          },
+        },
+      },
+      select: {
+        username: true,
+        email: true,
+        imageProfile: true,
+        type: true,
+      },
+    });
 
-    await sql`INSERT INTO client (username, first_name, last_name) VALUES (${username}, ${firstName}, ${lastName})`;
+    console.log("test: ", newUser);
 
     const token = jwt.sign(
       {
-        username: username,
-        type: "client",
+        username: newUser.username,
+        type: newUser.type,
       },
       SECRET_KEY,
       { expiresIn: "24h" }
@@ -42,9 +72,9 @@ export const createNewClient: RequestHandler = async (req, res, next) => {
 
     res.status(201).json({
       message: "Client added successfully!",
-      user: username,
+      user: newUser.username,
       token,
-      image: null,
+      image: newUser.imageProfile,
     });
   } catch (error) {
     next(error);

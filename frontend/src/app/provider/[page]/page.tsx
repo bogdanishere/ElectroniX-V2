@@ -16,14 +16,14 @@ interface OrdersProps {
 }
 
 interface OrdersProp {
-  order_detail_id: number;
-  order_id: number;
-  product_id: string;
+  orderProviderId: number;
+  orderEmployeeId: number;
+  productId: string;
+  providerUsername: string;
+  providerApproved: boolean;
   quantity: number;
-  product_name: string;
-  date_created: string;
-  employee_approved: number;
-  provider_username: string;
+  arrivalDate: string;
+  status: string;
 }
 
 interface ProductsProps {
@@ -31,30 +31,27 @@ interface ProductsProps {
 }
 
 interface ProductProps {
-  product_id: string;
-  price: string;
+  productId: string;
+  price: number;
   currency: string;
   weight: string;
   name: string;
   brand: string;
   quantity: number;
-  prices_availability: string;
-  prices_condition: string;
-  prices_merchant: string;
-  prices_sourceURLs: string;
+  pricesAvailability: string;
+  pricesMerchant: string;
   categories: string;
   dateAdded: string;
   dateUpdated: string;
-  imageurls: string;
-  sourceURLs: string;
-  rating: string;
-  nr_rating: number;
+  imageUrls: string;
+  rating: number;
+  nrOfRatings: number;
   description: string;
-  quality: string;
+  quality: number;
 }
 
 export default async function Page({ params }: { params: { page: string } }) {
-  await verifyRestriction("provider");
+  await verifyRestriction("PROVIDER");
 
   const orders: OrdersProps = await showOrdersProvider();
 

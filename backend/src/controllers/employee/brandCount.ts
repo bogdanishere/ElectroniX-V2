@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import sql from "../../models/neon";
+import { prisma } from "../../models/neon";
 
 export const brandCount: RequestHandler = async (req, res, next) => {
   const { numberOfBrandsToShow } = req.params;
@@ -13,13 +13,22 @@ export const brandCount: RequestHandler = async (req, res, next) => {
   }
 
   try {
-    const brands = await sql`SELECT brand, COUNT(*) AS numar_produse
-    FROM product
-    GROUP BY brand
-    ORDER BY numar_produse DESC
-    LIMIT ${limit}`;
+    const brands = await prisma.products.groupBy({
+      by: ["brand"],
+      _count: {
+        brand: true,
+      },
+      orderBy: {
+        _count: {
+          brand: "desc",
+        },
+      },
+      take: limit,
+    });
 
-    res.status(200).json({ brands: brands });
+    console.log(brands);
+
+    res.status(200).json({ brands });
   } catch (error) {
     console.error("Database error:", error);
     next(error);

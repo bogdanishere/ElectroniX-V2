@@ -8,26 +8,23 @@ interface ProductsProps {
 }
 
 interface ProductProps {
-  product_id: string;
-  price: string;
+  productId: string;
+  price: number;
   currency: string;
   weight: string;
   name: string;
   brand: string;
   quantity: number;
-  prices_availability: string;
-  prices_condition: string;
-  prices_merchant: string;
-  prices_sourceURLs: string;
+  pricesAvailability: string;
+  pricesMerchant: string;
   categories: string;
   dateAdded: string;
   dateUpdated: string;
-  imageurls: string;
-  sourceURLs: string;
-  rating: string;
-  nr_rating: number;
+  imageUrls: string;
+  rating: number;
+  nrOfRatings: number;
   description: string;
-  quality: string;
+  quality: number;
 }
 
 export default function ProductListProvider({
@@ -44,7 +41,7 @@ export default function ProductListProvider({
     switch (action.type) {
       case "delete":
         return state.filter(
-          (product) => product.product_id !== action.productId
+          (product) => product.productId !== action.productId
         );
       case "revertDelete":
         return action.product ? [...state, action.product] : state;
@@ -58,7 +55,7 @@ export default function ProductListProvider({
       {optimisticProducts.length > 0 ? (
         optimisticProducts.map((product: ProductProps) => (
           <ProductCardProvider
-            key={product.product_id}
+            key={product.productId}
             dataProduct={product}
             optimisticDeleteProductOperation={updateOptimisticProducts}
             page={params.page}

@@ -1,0 +1,185 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum UserType {
+  CLIENT
+  EMPLOYEE
+  PROVIDER
+}
+
+enum AddressType {
+  BILLING
+  SHIPPING
+}
+
+enum OrderStatus {
+  PREPARING
+  IN_TRANSIT
+  DELIVERED
+  CANCELED
+}
+
+enum CurrencyEnum {
+  USD
+  EUR
+  GBP
+  JPY
+  RON
+}
+
+enum PricesAvailability {
+  IN_STOCK
+  OUT_OF_STOCK
+}
+
+model Users {
+  id            Int       @id @default(autoincrement())
+  username      String    @unique
+  password      String
+  email         String    @unique
+  type          UserType
+  imageProfile  String?  
+  
+  client   Client?
+  employee Employee?
+  provider Provider?
+
+  @@unique([username, email])
+}
+
+
+model Client {
+  id        Int      @id @map("user_id")
+  username  String   @unique
+  firstName String  
+  lastName  String
+
+  user Users @relation(fields: [id], references: [id], onDelete: Cascade)
+
+
+  address Address[]
+  ordersEmployee OrdersEmployee[]
+  ratingClient ratingClient[]
+}
+
+model Employee {
+  id           Int      @id @map("user_id")
+  username     String   @unique
+  employeeName String
+
+  user Users @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  ordersEmployee OrdersEmployee[]
+}
+
+model Provider {
+  id       Int      @id @map("user_id")
+  username String   @unique
+  company  String
+
+  users Users @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  ordersProvider OrdersProvider[]
+  products Products[]
+}
+
+model Address{
+  addressId Int @id @default(autoincrement())
+  clientUsername String @map("username")
+  street String
+  city String
+  country String
+  postalCode String
+  addressType AddressType
+
+  client Client @relation(fields: [clientUsername], references: [username])
+  
+  ordersEmployee OrdersEmployee[]
+}
+
+model OrdersEmployee{
+  orderEmployeeId Int @id @default(autoincrement())
+  clientUsername String @map("username")
+  addressId Int @map("addressId")
+  employeeUsername String @map("employeeUsername")
+  dateCreated DateTime
+  employeeApproved Boolean
+
+  client Client @relation(fields: [clientUsername], references: [username])
+  address Address @relation(fields: [addressId], references: [addressId])
+  employee Employee @relation(fields: [employeeUsername], references: [username])
+
+  ordersProvider OrdersProvider[]
+  
+}
+
+
+model OrdersProvider {
+  orderProviderId  Int        @id @default(autoincrement())
+  orderEmployeeId  Int        @map("orderEmployeeId")
+  productId        String
+  providerUsername String     @map("providerUsername")
+  providerApproved Boolean
+  quantity         Int
+  arrivalDate      DateTime
+  status           OrderStatus
+
+  ordersEmployee OrdersEmployee @relation(fields: [orderEmployeeId], references: [orderEmployeeId], onDelete: Cascade)
+  provider       Provider       @relation(fields: [providerUsername], references: [username], onDelete: Cascade)
+  product        Products       @relation(fields: [productId], references: [productId]) // Add this line
+}
+
+
+model ratingClient {
+  ratingId       Int       @id @default(autoincrement())
+  clientUsername String    @map("username")
+  productId      String    @map("productId")
+  rating         Float
+  review         String
+  dateCreated    DateTime
+  title          String
+
+  client   Client   @relation(fields: [clientUsername], references: [username])
+  products Products @relation(fields: [productId], references: [productId])
+
+  @@unique([clientUsername, productId], name: "unique_client_product_review")
+}
+
+
+model Products {
+  productId         String  @id @default(cuid()) 
+  price             Float
+  currency          CurrencyEnum
+  name              String
+  weight            String
+  brand             String
+  quantity          Int
+  pricesAvailability PricesAvailability?
+  pricesMerchant    String @map("providerUsername")
+  categories        String
+  dateAdded         DateTime  @default(now())   
+  dateUpdated       DateTime  @updatedAt
+  imageUrls         String
+  rating            Float
+  nrOfRatings       Int           
+  description       String
+  quality           Decimal   @default(dbgenerated()) @db.Decimal(15, 4)
+  provider Provider @relation(fields: [pricesMerchant], references: [username])
+  ratingClient ratingClient[]
+  ordersProvider OrdersProvider[]
+
+}
+

@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import sql from "../../models/neon";
+import { prisma } from "../../models/neon";
 
 export const showOrders: RequestHandler = async (req, res) => {
   const { username } = req.query;
@@ -9,10 +9,12 @@ export const showOrders: RequestHandler = async (req, res) => {
   }
 
   try {
-    const orders =
-      await sql` SELECT * FROM order_table WHERE employee_approved = FALSE AND employee_username = ${
-        username as string
-      }`;
+    const orders = await prisma.ordersEmployee.findMany({
+      where: {
+        employeeApproved: false,
+        employeeUsername: username as string,
+      },
+    });
 
     res.status(200).json({ orders: orders, message: "Success" });
   } catch (error) {

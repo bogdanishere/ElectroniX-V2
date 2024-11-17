@@ -17,6 +17,7 @@ const env = cleanEnv(process.env, {
   SERVER_URL: str(),
   FRONTEND_URL: str(),
   BACKEND_URL: str(),
+  DATABASE_URL: str(),
 });
 
 export default env;

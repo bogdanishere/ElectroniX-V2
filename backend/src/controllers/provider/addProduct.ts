@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import sql from "../../models/neon";
+import { prisma } from "../../models/neon";
 import { put } from "@vercel/blob";
 
 export const addProduct: RequestHandler = async (req, res, next) => {
@@ -33,6 +33,7 @@ export const addProduct: RequestHandler = async (req, res, next) => {
 
   const providerUsername = req.body.username || req.query.username;
 
+  console.log(providerUsername);
   if (
     !price ||
     !currency ||
@@ -63,43 +64,43 @@ export const addProduct: RequestHandler = async (req, res, next) => {
   });
 
   try {
-    await sql`
-      INSERT INTO product (
-        product_id,
+    const provider = await prisma.provider.findUnique({
+      where: {
+        username: providerUsername,
+      },
+    });
+
+    if (!provider) {
+      return res.status(404).json({
+        message: "Provider not found",
+      });
+    }
+
+    await prisma.products.create({
+      data: {
+        productId: productId,
         name,
-        price,
+        price: parseFloat(price),
         currency,
         weight,
         brand,
-        quantity,
-        prices_availability,
-        prices_merchant,
+        quantity: parseInt(quantity),
+        pricesAvailability: "IN_STOCK",
         categories,
-        dateadded,
-        dateupdated,
-        imageurls,
-        rating,
-        nr_rating,
-        description
-      ) VALUES (
-        ${productId},
-        ${name},
-        ${price},
-        ${currency},
-        ${weight},
-        ${brand},
-        ${quantity},
-        ${"in stock"},
-        ${providerUsername},
-        ${categories},
-        ${new Date().toISOString()},
-        ${new Date().toISOString()},
-        ${blob.url},
-        ${0},
-        ${0},
-        ${description}
-      )
-    `;
+        dateAdded: new Date().toISOString(),
+        dateUpdated: new Date().toISOString(),
+        imageUrls: blob.url,
+        rating: 0,
+        nrOfRatings: 0,
+        description,
+        quality: 1,
+        provider: {
+          connect: {
+            username: providerUsername,
+          },
+        },
+      },
+    });
 
     res.status(200).json({
       message: "Product added successfully",

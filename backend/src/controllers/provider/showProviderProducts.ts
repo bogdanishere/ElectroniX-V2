@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import sql from "../../models/neon";
+import { prisma } from "../../models/neon";
 
 export const showProviderProducts: RequestHandler = async (req, res, next) => {
   const { username: providerUsername } = req.query;
@@ -14,22 +14,30 @@ export const showProviderProducts: RequestHandler = async (req, res, next) => {
   }
 
   try {
-    const provider = await sql`
-      SELECT * FROM provider where username = ${providerUsername as string}
-    `;
+    const provider = await prisma.provider.findUnique({
+      where: {
+        username: providerUsername as string,
+      },
+    });
 
-    if (provider.length === 0) {
+    if (!provider) {
       res.status(404).json({ message: "Provider not found" });
       return;
     }
 
-    const offset = (parseInt(page) - 1) * limit;
+    const offset =
+      (parseInt(page) - 1) * limit ? (parseInt(page) - 1) * limit : 0;
 
-    const products = await sql`
-      SELECT * FROM product WHERE prices_merchant = ${
-        providerUsername as string
-      } ORDER BY dateAdded DESC LIMIT ${limit} OFFSET ${offset}
-    `;
+    const products = await prisma.products.findMany({
+      where: {
+        pricesMerchant: providerUsername as string,
+      },
+      orderBy: {
+        dateAdded: "desc",
+      },
+      take: limit,
+      skip: offset,
+    });
 
     res.status(200).json({ products });
   } catch (error) {

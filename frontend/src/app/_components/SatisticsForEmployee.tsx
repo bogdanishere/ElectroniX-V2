@@ -7,7 +7,7 @@ import { useState } from "react";
 import { getBrandCount } from "../_lib/actions";
 
 interface BrandSatisticsProps {
-  brands: { brand: string; numar_produse: number }[];
+  brands: { brand: string; _count: { brand: number } }[];
 }
 
 export default function SatisticsForEmployee({
@@ -36,8 +36,8 @@ export default function SatisticsForEmployee({
       setData(
         brands.brands.map((brand) => ({
           name: brand.brand,
-          value: brand.numar_produse,
-          label: `${brand.brand} - ${brand.numar_produse}`,
+          value: brand._count.brand,
+          label: `${brand.brand} - ${brand._count.brand}`,
         }))
       );
     } catch (error) {

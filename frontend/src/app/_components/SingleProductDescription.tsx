@@ -12,7 +12,7 @@
 // import { useButtonsFunctionality } from "@/hooks/useButtonsFunctionality";
 
 // interface ProductDetails {
-//   product_id: string;
+//   productId: string;
 //   name: string;
 //   brand: string;
 //   price: string;
@@ -49,14 +49,14 @@
 //   const { setOpenReview } = useButtonsFunctionality();
 
 //   const {
-//     product_id,
+//     productId,
 //     prices_merchant: provider,
 //     price,
 //     imageurls: images,
 //     name,
 //     description,
 //     rating,
-//     nr_rating: nrRating,
+//     nr_rating: nrOfRatings,
 //   } = dataProduct.product;
 
 //   const [imageSrc, setImageSrc] = useState(images);
@@ -97,7 +97,7 @@
 //               <Button
 //                 className="w-64"
 //                 onClick={() =>
-//                   handleAddToCart(product_id, name, provider, price)
+//                   handleAddToCart(productId, name, provider, price)
 //                 }
 //               >
 //                 Adauga in cos
@@ -107,7 +107,7 @@
 //               <Button
 //                 className="w-64"
 //                 onClick={() =>
-//                   handleAddToWishlist(product_id, name, provider, price)
+//                   handleAddToWishlist(productId, name, provider, price)
 //                 }
 //               >
 //                 Adauga la Favorite
@@ -126,7 +126,7 @@
 //                 cursor="default"
 //               />
 //               <h1>
-//                 {rating} ({nrRating})
+//                 {rating} ({nrOfRatings})
 //               </h1>
 //             </div>
 //           </li>
@@ -160,25 +160,23 @@ import Spinner from "@/utils/Spinner";
 import { useButtonsFunctionality } from "@/hooks/useButtonsFunctionality";
 
 interface ProductDetails {
-  product_id: string;
+  productId: string;
+  price: number;
+  currency: string;
+  weight: string;
   name: string;
   brand: string;
-  price: string;
-  currency: string;
+  quantity: number;
+  pricesAvailability: string;
+  pricesMerchant: string;
   categories: string;
   dateAdded: string;
   dateUpdated: string;
+  imageUrls: string;
+  rating: number;
+  nrOfRatings: number;
   description: string;
-  imageurls: string;
-  rating: string;
-  nr_rating: number;
-  prices_availability: string;
-  prices_condition: string;
-  prices_merchant: string;
-  prices_sourceURLs: string;
-  quality: string;
-  quantity: number;
-  weight: string;
+  quality: number;
 }
 
 interface ProductStatus {
@@ -197,14 +195,14 @@ export default function SingleProductDescription({
   const { setOpenReview } = useButtonsFunctionality();
 
   const {
-    product_id,
-    prices_merchant: provider,
+    productId,
+    pricesMerchant: provider,
     price,
-    imageurls: images,
+    imageUrls: images,
     name,
     description,
     rating,
-    nr_rating: nrRating,
+    nrOfRatings,
   } = dataProduct.product;
 
   const [imageSrc, setImageSrc] = useState(images);
@@ -245,7 +243,7 @@ export default function SingleProductDescription({
               <Button
                 className="w-full md:w-64"
                 onClick={() =>
-                  handleAddToCart(product_id, name, provider, price)
+                  handleAddToCart(productId, name, provider, price)
                 }
               >
                 Add to cart
@@ -255,7 +253,7 @@ export default function SingleProductDescription({
               <Button
                 className="w-full md:w-64"
                 onClick={() =>
-                  handleAddToWishlist(product_id, name, provider, price)
+                  handleAddToWishlist(productId, name, provider, price)
                 }
               >
                 Add to favorites
@@ -274,7 +272,7 @@ export default function SingleProductDescription({
                 cursor="default"
               />
               <h1>
-                {rating} ({nrRating})
+                {rating} ({nrOfRatings})
               </h1>
             </div>
           </li>
