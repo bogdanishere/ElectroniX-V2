@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-type TypeUser = "client" | "employee" | "provider";
+type TypeUser = "CLIENT" | "EMPLOYEE" | "PROVIDER";
 
 export const verifyRestriction = async (typeUser: TypeUser) => {
   const cookiesLogin = cookies().get("login")?.value;

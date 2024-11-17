@@ -1,6 +1,7 @@
 // models/neon.ts
 import postgres from "postgres";
 import env from "../../env";
+import { PrismaClient } from "@prisma/client";
 
 const sql = postgres({
   host: env.PGHOST,
@@ -15,3 +16,5 @@ const sql = postgres({
 });
 
 export default sql;
+
+export const prisma = new PrismaClient();

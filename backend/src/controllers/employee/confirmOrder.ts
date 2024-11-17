@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import sql from "../../models/neon";
+import { prisma } from "../../models/neon";
 
 export const confirmOrder: RequestHandler = async (req, res, next) => {
   const { orderId } = req.params;
@@ -11,18 +11,26 @@ export const confirmOrder: RequestHandler = async (req, res, next) => {
       .json({ message: "Order ID and username are required." });
   }
 
-  const employee = await sql`
-    SELECT * FROM employee where username = ${username as string}`;
+  const employee = await prisma.employee.findUnique({
+    where: {
+      username: username as string,
+    },
+  });
 
-  if (employee.length === 0) {
+  if (!employee) {
     return res.status(404).json({ message: "Employee not found" });
   }
 
   try {
-    await sql` UPDATE order_table
-    SET employee_approved = TRUE, employee_username = ${username as string}
-    WHERE order_id = ${orderId}
-    `;
+    await prisma.ordersEmployee.update({
+      where: {
+        orderEmployeeId: Number(orderId),
+      },
+      data: {
+        employeeApproved: true,
+        employeeUsername: username as string,
+      },
+    });
 
     res.status(200).json({ message: "Order confirmed" });
   } catch (error) {

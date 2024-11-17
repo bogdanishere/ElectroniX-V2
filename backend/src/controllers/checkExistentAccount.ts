@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import sql from "../models/neon";
+import { prisma } from "../models/neon";
 
 interface UserData {
   username: string;
@@ -13,7 +13,11 @@ export const checkExistentAccount: RequestHandler = async (req, res, next) => {
   const { username } = req.body as UserData;
 
   try {
-    const users = await sql`SELECT * FROM users WHERE username = ${username}`;
+    const users = await prisma.users.findMany({
+      where: {
+        username: username,
+      },
+    });
 
     if (users.length > 0) {
       return res

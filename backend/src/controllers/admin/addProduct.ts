@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import sql from "../../models/neon";
+import { prisma } from "../../models/neon";
 
 export const addProduct: RequestHandler = async (req, res, next) => {
   try {
@@ -25,9 +25,11 @@ export const addProduct: RequestHandler = async (req, res, next) => {
         .json({ error: "Missing required product information" });
     }
 
-    const providerExists = await sql`
-      SELECT * FROM provider WHERE username = ${provider}
-    `;
+    const providerExists = await prisma.provider.findMany({
+      where: {
+        username: provider,
+      },
+    });
 
     if (!providerExists[0]) {
       return res.status(400).json({ error: "Provider does not exist" });
@@ -49,43 +51,26 @@ export const addProduct: RequestHandler = async (req, res, next) => {
 
     const productId = generateCode();
 
-    await sql`
-      INSERT INTO product (
-        product_id,
+    await prisma.products.create({
+      data: {
+        productId,
         name,
         price,
         currency,
         weight,
         brand,
         quantity,
-        prices_availability,
-        prices_merchant,
+        pricesAvailability: prices_availability,
+        pricesMerchant: provider,
         categories,
-        dateadded,
-        dateupdated,
-        imageurls,
+        dateAdded: new Date().toISOString(),
+        dateUpdated: new Date().toISOString(),
+        imageUrls: imageURLs,
         rating,
-        nr_rating,
-        description
-      ) VALUES (
-        ${productId},
-        ${name},
-        ${price},
-        ${currency},
-        ${weight},
-        ${brand},
-        ${quantity},
-        ${prices_availability},
-        ${provider},
-        ${categories},
-        ${new Date().toISOString()},
-        ${new Date().toISOString()},
-        ${imageURLs},
-        ${rating},
-        ${nr_rating},
-        ${description}
-      )
-    `;
+        nrOfRatings: nr_rating,
+        description,
+      },
+    });
 
     res.status(201).json({ status: "success" });
   } catch (error) {

@@ -10,14 +10,14 @@ interface OrdersProps {
 }
 
 interface OrdersProp {
-  order_detail_id: number;
-  order_id: number;
-  product_id: string;
+  orderProviderId: number;
+  orderEmployeeId: number;
+  productId: string;
+  providerUsername: string;
+  providerApproved: boolean;
   quantity: number;
-  product_name: string;
-  date_created: string;
-  employee_approved: number;
-  provider_username: string;
+  arrivalDate: string;
+  status: string;
 }
 
 export default function OrderProviderList({
@@ -31,7 +31,7 @@ export default function OrderProviderList({
     OrdersProp[],
     unknown
   >(orders.orders, (curOrders, orderId) => {
-    return curOrders.filter((order) => order.order_detail_id !== orderId);
+    return curOrders.filter((order) => order.orderProviderId !== orderId);
   });
 
   return (
@@ -49,25 +49,25 @@ export default function OrderProviderList({
         {optimisticOrders.length > 0 ? (
           optimisticOrders.map((order: OrdersProp) => (
             <div
-              key={order.order_detail_id}
+              key={order.orderProviderId}
               className="grid grid-cols-7 gap-4 p-4 border-b hover:bg-gray-50"
             >
-              <div>{order.order_detail_id}</div>
-              <div>{order.product_id}</div>
+              <div>{order.orderProviderId}</div>
+              <div>{order.productId}</div>
               <div>{order.quantity}</div>
               <div className="relative group">
                 <span className="cursor-pointer">
-                  {order.product_name.slice(0, 10)}...
+                  {order.status.slice(0, 10)}...
                 </span>
                 <span className="absolute left-0 top-full mt-2 w-48 p-2 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-                  {order.product_name}
+                  {order.status}
                 </span>
               </div>
-              <div>{formatDate(order.date_created)}</div>
-              <div>{order.employee_approved ? "Yes" : "No"}</div>
+              <div>{formatDate(order.arrivalDate)}</div>
+              <div>{order.providerApproved ? "Yes" : "No"}</div>
               <div>
                 <AcceptRejectCommandsByProvider
-                  orderId={order.order_detail_id}
+                  orderId={order.orderProviderId}
                   page={params.page}
                   optimisticAcceptedOrderOperation={
                     optimisticAcceptedOrderOperation

@@ -9,12 +9,13 @@ interface ReviewProps {
 }
 
 interface ReviewProp {
-  client_username: string;
-  product_id: string;
-  rating: string;
-  date_added: string;
-  title: string;
+  ratingId: number;
+  clientUsername: string;
+  productId: string;
+  rating: number;
   review: string;
+  dateCreated: string;
+  title: string;
 }
 
 export default async function ReviewSection({
@@ -23,6 +24,7 @@ export default async function ReviewSection({
   productID: string;
 }) {
   const reviews: ReviewProps = await api.getReview(productID);
+
   return (
     <div className="w-full p-4 sm:p-6 md:p-8 flex flex-col gap-4 text-base sm:text-lg">
       {reviews.review.length > 0 ? (
@@ -50,10 +52,10 @@ export default async function ReviewSection({
                     cursor="default"
                   />
                   <p className="text-xs sm:text-sm text-gray-500">
-                    {formatDate(review.date_added)}
+                    {formatDate(review.dateCreated)}
                   </p>
                   <p className="text-xs sm:text-sm text-gray-500">
-                    Review By: {review.client_username}
+                    Review By: {review.clientUsername}
                   </p>
                 </div>
               );

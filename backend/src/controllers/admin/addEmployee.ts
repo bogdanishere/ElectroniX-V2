@@ -1,25 +1,32 @@
 import { RequestHandler } from "express";
-import sql from "../../models/neon";
 import bcrypt from "bcryptjs";
+
+import { prisma } from "../../models/neon";
 
 export const addEmployee: RequestHandler = async (req, res, next) => {
   try {
-    const { name, email } = req.body;
+    const { username, name, email } = req.body;
 
     const defaultPassword = "password_employee";
-    const userType = "employee";
+    const userType = "EMPLOYEE";
 
     const hashedPassword = bcrypt.hashSync(defaultPassword, 8);
 
-    await sql`
-      INSERT INTO users (username, password, email, type)
-      VALUES (${name}, ${hashedPassword}, ${email}, ${userType})
-    `;
-
-    await sql`
-      INSERT INTO employee (username, employee_name)
-      VALUES (${name}, ${name})
-    `;
+    await prisma.users.create({
+      data: {
+        username,
+        password: hashedPassword,
+        email,
+        type: userType,
+        imageProfile: "",
+        employee: {
+          create: {
+            username,
+            employeeName: name,
+          },
+        },
+      },
+    });
 
     res.status(201).json({ status: "success" });
   } catch (error) {

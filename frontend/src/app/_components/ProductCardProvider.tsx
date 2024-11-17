@@ -9,26 +9,23 @@ import Button from "@/utils/Button";
 import { deleteProviderProduct } from "../_lib/actions";
 
 interface ProductProps {
-  product_id: string;
-  price: string;
+  productId: string;
+  price: number;
   currency: string;
   weight: string;
   name: string;
   brand: string;
   quantity: number;
-  prices_availability: string;
-  prices_condition: string;
-  prices_merchant: string;
-  prices_sourceURLs: string;
+  pricesAvailability: string;
+  pricesMerchant: string;
   categories: string;
   dateAdded: string;
   dateUpdated: string;
-  imageurls: string;
-  sourceURLs: string;
-  rating: string;
-  nr_rating: number;
+  imageUrls: string;
+  rating: number;
+  nrOfRatings: number;
   description: string;
-  quality: string;
+  quality: number;
 }
 
 export default function ProductCardProvider({
@@ -45,11 +42,11 @@ export default function ProductCardProvider({
   page: number | string;
 }) {
   const {
-    product_id,
-    imageurls: images,
+    productId,
+    imageUrls: images,
     name,
     rating,
-    nr_rating: numberOfRatings,
+    nrOfRatings: numberOfRatings,
     price,
     currency,
   } = dataProduct;
@@ -60,16 +57,16 @@ export default function ProductCardProvider({
 
   const [imageSrc, setImageSrc] = useState(images);
 
-  async function handleDeleteProduct(product_id: string) {
+  async function handleDeleteProduct(productId: string) {
     startTransition(() => {
       optimisticDeleteProductOperation({
         type: "delete",
-        productId: product_id,
+        productId: productId,
       });
     });
 
     try {
-      await deleteProviderProduct(product_id, page);
+      await deleteProviderProduct(productId, page);
     } catch (error) {
       startTransition(() => {
         optimisticDeleteProductOperation({
@@ -130,7 +127,7 @@ export default function ProductCardProvider({
           </span>
         </div>
         <div className="p-2 bg-gray-100 text-center">
-          <Button onClick={() => handleDeleteProduct(product_id)}>
+          <Button onClick={() => handleDeleteProduct(productId)}>
             Delete product
           </Button>
         </div>

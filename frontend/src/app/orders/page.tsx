@@ -6,23 +6,19 @@ import { formatDate } from "@/utils/formatDate";
 import { getTokenUsernameProfilePic } from "@/helpers/getUserDetails";
 
 interface OrdersProps {
-  orders: OrdersProp[];
+  orders: OrderProp[];
 }
 
-interface OrdersProp {
-  client_username: string;
-  date_created: string;
-  employee_approved: boolean;
+interface OrderProp {
+  orderEmployeeId: number;
+  orderProviderId: number;
+  productId: string;
   quantity: number;
-  product_id: string;
-  product_name: string;
-  brand: string;
-  price: string;
-  currency: "USD";
-  provider_approved: boolean;
-  employee_username: string;
-  status: "preparing" | "in_transit";
-  arrival_time: null;
+  name: string;
+  price: number;
+  currency: string;
+  status: string;
+  arrivalDate: string | null;
 }
 
 export default async function Page() {
@@ -63,21 +59,21 @@ function OrderList({ orders }: OrdersProps) {
     <ul className="list-none w-full space-y-4">
       {orders.map((order, index) => (
         <li
-          key={order.product_id + index}
+          key={order.orderEmployeeId + index}
           className="bg-white border border-gray-200 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg"
         >
           <div className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <Link href={`/product/${order.product_id}`} className="flex-grow">
+            <Link href={`/product/${order.productId}`} className="flex-grow">
               <div className="text-base sm:text-lg font-bold flex items-center">
                 <div className="relative group">
                   <span className="hidden group-hover:block absolute left-0 bottom-full mb-2 p-2 bg-gray-800 text-white text-xs rounded z-10 w-64 sm:w-80">
-                    {order.quantity} x {order.product_name}
+                    {order.quantity} x {order.name}
                   </span>
                   <p className="text-sm sm:text-base truncate max-w-xs sm:max-w-sm">
                     {order.quantity} x{" "}
-                    {order.product_name.length > 20
-                      ? `${order.product_name.slice(0, 20)}...`
-                      : order.product_name}
+                    {order.name.length > 20
+                      ? `${order.name.slice(0, 20)}...`
+                      : order.name}
                   </p>
                 </div>
               </div>
@@ -87,7 +83,7 @@ function OrderList({ orders }: OrdersProps) {
             </div>
             <div className="text-sm text-gray-500 flex items-center">
               {order.status === "in_transit" ? (
-                <span>Arrival: {formatDate(order.arrival_time || "")}</span>
+                <span>Arrival: {formatDate(order.arrivalDate || "")}</span>
               ) : (
                 <span>Status: {order.status}</span>
               )}

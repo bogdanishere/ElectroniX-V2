@@ -6,7 +6,7 @@ const SECRET_KEY = env.JWT_SECRET;
 
 interface DecodedToken {
   username: string;
-  type: "client" | "employee" | "provider";
+  type: "CLIENT" | "EMPLOYEE" | "PROVIDER";
   iat: number;
   exp: number;
 }
@@ -34,9 +34,9 @@ export const verifyTokenUsers = (
     const decodedToken = decoded as DecodedToken;
 
     if (
-      (decodedToken.type === "provider" ||
-        decodedToken.type === "client" ||
-        decodedToken.type === "employee") &&
+      (decodedToken.type === "PROVIDER" ||
+        decodedToken.type === "CLIENT" ||
+        decodedToken.type === "EMPLOYEE") &&
       decodedToken.username === username
     ) {
       // @ts-expect-error Property 'user' does exist on type 'Request'.

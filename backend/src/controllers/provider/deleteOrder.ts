@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import sql from "../../models/neon";
+import { prisma } from "../../models/neon";
 
 export const deleteOrder: RequestHandler = async (req, res, next) => {
   const { orderDetailId } = req.params;
@@ -11,22 +11,24 @@ export const deleteOrder: RequestHandler = async (req, res, next) => {
       return;
     }
 
-    const provider = await sql`
-      SELECT * FROM provider where username = ${username as string}
-    `;
+    const provider = await prisma.provider.findUnique({
+      where: {
+        username: username as string,
+      },
+    });
 
-    if (provider.length === 0) {
+    if (!provider) {
       res.status(404).json({
         message: "Provider not found",
       });
       return;
     }
 
-    await sql`
-      DELETE FROM orderdetails WHERE order_detail_id = ${
-        String(orderDetailId) as string
-      } AND provider_username = ${username as string}
-    `;
+    await prisma.ordersProvider.delete({
+      where: {
+        orderProviderId: Number(orderDetailId),
+      },
+    });
 
     res.status(200).json({
       orderDetailId,

@@ -11,20 +11,20 @@ interface OrdersProps {
 }
 
 interface OrdersProp {
-  order_id: number;
-  client_username: string;
-  address_id: number;
-  employee_username: string;
-  date_created: string;
-  employee_approved: boolean;
+  orderEmployeeId: number;
+  clientUsername: string;
+  addressId: number;
+  employeeUsername: string;
+  dateCreated: string;
+  employeeApproved: boolean;
 }
 
 interface BrandSatisticsProps {
-  brands: { brand: string; numar_produse: number }[];
+  brands: { brand: string; _count: { brand: number } }[];
 }
 
 export default async function Page() {
-  await verifyRestriction("employee");
+  await verifyRestriction("EMPLOYEE");
 
   const orders: OrdersProps = (await getOrdersEmployee()) || [];
 
@@ -40,8 +40,8 @@ export default async function Page() {
         <SatisticsForEmployee
           dataStatistics={brandSatistics.brands.map((brand) => ({
             name: brand.brand,
-            value: brand.numar_produse,
-            label: `${brand.brand} - ${brand.numar_produse}`,
+            value: brand._count.brand,
+            label: `${brand.brand} - ${brand._count.brand}`,
           }))}
           width={1000}
           height={400}

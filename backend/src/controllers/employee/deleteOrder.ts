@@ -1,13 +1,15 @@
 import { RequestHandler } from "express";
-import sql from "../../models/neon";
+import { prisma } from "../../models/neon";
 
 export const deleteOrder: RequestHandler = async (req, res, next) => {
   const { orderId } = req.params;
 
   try {
-    await sql`DELETE FROM orderdetails WHERE order_id = ${orderId}`;
-
-    await sql`DELETE FROM order_table WHERE order_id = ${orderId}`;
+    await prisma.ordersEmployee.delete({
+      where: {
+        orderEmployeeId: +orderId,
+      },
+    });
 
     return res.status(200).json({
       orderId,

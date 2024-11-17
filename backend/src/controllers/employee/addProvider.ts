@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import sql from "../../models/neon";
+import { prisma } from "../../models/neon";
 import bcrypt from "bcryptjs";
 
 export const addProvider: RequestHandler = async (req, res, next) => {
@@ -15,8 +15,12 @@ export const addProvider: RequestHandler = async (req, res, next) => {
 
     const hashedPassword = bcrypt.hashSync(password, 8);
 
-    const existUser =
-      await sql`SELECT * FROM users WHERE username = ${name} AND email = ${email}`;
+    const existUser = await prisma.users.findMany({
+      where: {
+        username: name,
+        email: email,
+      },
+    });
 
     if (existUser.length > 0) {
       return res
@@ -24,10 +28,21 @@ export const addProvider: RequestHandler = async (req, res, next) => {
         .json({ status: "error", message: "User already exists" });
     }
 
-    await sql`
-        INSERT INTO users (username, password, email, type) VALUES (${name}, ${hashedPassword}, ${email}, 'provider')`;
-
-    await sql`INSERT INTO provider (username, company) VALUES (${name}, ${name})`;
+    await prisma.users.create({
+      data: {
+        username: name,
+        password: hashedPassword,
+        email: email,
+        type: "PROVIDER",
+        imageProfile: "",
+        provider: {
+          create: {
+            username: name,
+            company: name,
+          },
+        },
+      },
+    });
 
     res.status(201).json({ status: "success" });
   } catch (error) {

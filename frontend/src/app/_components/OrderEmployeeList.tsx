@@ -10,12 +10,12 @@ interface OrdersProps {
 }
 
 interface OrdersProp {
-  order_id: number;
-  client_username: string;
-  address_id: number;
-  employee_username: string;
-  date_created: string;
-  employee_approved: boolean;
+  orderEmployeeId: number;
+  clientUsername: string;
+  addressId: number;
+  employeeUsername: string;
+  dateCreated: string;
+  employeeApproved: boolean;
 }
 
 export default function OrderEmployeeList({ orders }: { orders: OrdersProps }) {
@@ -23,7 +23,7 @@ export default function OrderEmployeeList({ orders }: { orders: OrdersProps }) {
     OrdersProp[],
     unknown
   >(orders.orders, (curOrders, orderId) => {
-    return curOrders.filter((order) => order.order_id !== orderId);
+    return curOrders.filter((order) => order.orderEmployeeId !== orderId);
   });
   return (
     <>
@@ -39,22 +39,22 @@ export default function OrderEmployeeList({ orders }: { orders: OrdersProps }) {
       {optimisticOrders.length > 0 ? (
         optimisticOrders.map((order) => (
           <div
-            key={order.order_id}
+            key={order.orderEmployeeId}
             className="grid grid-cols-7 border-b p-2 items-center"
           >
-            <div className="flex justify-center">{order.order_id}</div>
-            <div className="flex justify-center">{order.client_username}</div>
-            <div className="flex justify-center">{order.address_id}</div>
-            <div className="flex justify-center">{order.employee_username}</div>
+            <div className="flex justify-center">{order.orderEmployeeId}</div>
+            <div className="flex justify-center">{order.clientUsername}</div>
+            <div className="flex justify-center">{order.addressId}</div>
+            <div className="flex justify-center">{order.employeeUsername}</div>
             <div className="flex justify-center">
-              {formatDate(order.date_created)}
+              {formatDate(order.dateCreated)}
             </div>
             <div className="flex justify-center">
-              {order.employee_approved ? "Yes" : "No"}
+              {order.employeeApproved ? "Yes" : "No"}
             </div>
 
             <AcceptRejectCommandsByEmployee
-              orderId={order.order_id}
+              orderId={order.orderEmployeeId}
               optimisticAcceptedOrderOperation={
                 optimisticAcceptedOrderOperation
               }

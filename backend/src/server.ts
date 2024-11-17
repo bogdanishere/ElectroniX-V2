@@ -18,7 +18,7 @@
 //     console.error("Error connecting to MongoDB or NEON", error);
 //   });
 
-// server.ts
+// // server.ts
 import mongoose from "mongoose";
 import env from "../env";
 import app from "./app";
