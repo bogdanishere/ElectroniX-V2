@@ -7,9 +7,10 @@
     "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist && tsc",
+    "postinstall": "prisma generate",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist",
-    "vercel-build": "echo hello"
+    "vercel-build": "prisma generate && prisma migrate deploy && next build"
   },
   "keywords": [],
   "author": "",
